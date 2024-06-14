@@ -18,8 +18,10 @@
 
   let audioElement
   let gainNode
-  let label
-  let src
+  let label = ''
+  let mute = false
+  let solo = false
+  let src = ''
   $: paused = $play$ == 'pause'
 
   const filename = fileHandle.name
@@ -35,6 +37,21 @@
   function handleFader(event) {
     gainNode.gain.value = event.detail
   }
+
+  let savedGain
+  function handleMute() {
+    // we get old value
+    if (!mute) {
+      savedGain = gainNode.gain.value
+      gainNode.gain.value = 0
+    } else {
+      gainNode.gain.value = savedGain
+      savedGain = undefined
+    }
+  }
+  function handleSolo() {
+    console.log(mute)
+  }
 </script>
 
 <div
@@ -45,6 +62,22 @@
     bind:paused
     bind:this={audioElement}></audio>
 
+  <div class="controls">
+    <label
+      ><input
+        type="checkbox"
+        id="solo"
+        bind:checked={solo}
+        on:click={handleSolo} />
+      Solo</label>
+    <label
+      ><input
+        type="checkbox"
+        id="Mute"
+        bind:checked={mute}
+        on:click={handleMute} />
+      Mute</label>
+  </div>
   <Fader
     {label}
     on:fader={handleFader}></Fader>
@@ -58,6 +91,4 @@
   .channel :global(input[type='range']) {
     height: 20em;
   }
-
-  
 </style>
