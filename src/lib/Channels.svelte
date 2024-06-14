@@ -1,12 +1,12 @@
 <script context="module">
   import { writable } from 'svelte/store'
-  const play$ = writable('pause')
+  const transport$ = writable('pause')
   export const actions = {
     play: function () {
-      play$.set('play')
+      transport$.set('play')
     },
     pause: function () {
-      play$.set('pause')
+      transport$.set('pause')
     },
   }
 </script>
@@ -16,7 +16,7 @@
   import ChannelStrip from '../lib/ChannelStrip.svelte'
   import FilePicker from './FilePicker.svelte'
 
-  setContext('play$', play$)
+  setContext('transport$', transport$)
 
   let fileHandles = []
   function handleFiles(event) {

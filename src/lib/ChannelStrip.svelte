@@ -12,7 +12,7 @@
 
   let channelNo = ++totalChannels
 
-  const play$ = getContext('play$')
+  const transport$ = getContext('transport$')
   const audioContext = getContext('audioContext')
   const mainBus = getContext('mainBus')
 
@@ -22,7 +22,7 @@
   let mute = false
   let solo = false
   let src = ''
-  $: paused = $play$ == 'pause'
+  $: paused = $transport$ == 'pause'
 
   const filename = fileHandle.name
   label = filename.substring(0, filename.lastIndexOf('.')) || filename
