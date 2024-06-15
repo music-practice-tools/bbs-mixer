@@ -1,38 +1,13 @@
-# create-svelte
+# BBS Mixer
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+A simple mixer using web audio. See the [demo](https://mixer.musicpracticetools.net)
 
-## Creating a project
+Open a directory and each audio file becomes a mixer channel strip to manage that file. Press play or pause.
 
-If you're seeing this, you've probably already done this step. Congrats!
+Just faders, mute and solo for each channel. Plus a master channel with mute and solo clear buttons, with its own mute.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+On of the growing collection of [musicpracticetools.net](https://musicpracticetools.net) music companion web apps.
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+Built with open source love by Steve Lee using [sveltkit](https://kit.svelte.dev) and deployed on [netlify](https://app.netlify.com/).
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+[![Netlify Status](https://api.netlify.com/api/v1/badges/cedef083-93c6-4ebb-b7e3-1a492a5aed68/deploy-status)](https://app.netlify.com/sites/relative-notes/deploys)
