@@ -1,30 +1,25 @@
 <script>
-  import { onMount } from 'svelte'
   import { setContext } from 'svelte'
 
-  import Fader from '$lib/Fader.svelte'
-  import Channels, { actions } from '$lib/Channels.svelte'
+  import Channels, { actions, numChannels$ } from '$lib/Channels.svelte'
+  import MainStrip from '$lib/MainStrip.svelte'
+  import { solo$, mute$ } from '$lib/ChannelStrip.svelte'
 
   let audioContext
   let isPaused = true
   $: btnText = isPaused ? 'Play' : 'Pause'
 
+  const AudioContext =
+    window.AudioContext || // Default
+    window.webkitAudioContext || // Safari and old versions of Chrome
+    false
   audioContext = new AudioContext()
+
   setContext('audioContext', audioContext) // share
   const mainBus = {}
   setContext('mainBus', mainBus) // share
-  let gainNode
-
-  onMount(() => {
-    const AudioContext =
-      window.AudioContext || // Default
-      window.webkitAudioContext || // Safari and old versions of Chrome
-      false
-
-    gainNode = audioContext.createGain()
-    gainNode.connect(audioContext.destination)
-    mainBus.gainNode = gainNode
-  })
+  setContext('solo$', solo$)
+  setContext('mute$', mute$)
 
   function handlePlay(event) {
     if (audioContext.state === 'suspended') {
@@ -51,13 +46,12 @@
       data-playing={isPaused ? 'false' : 'true'}
       on:click={handlePlay}
       role="switch"
-      aria-checked="false">
+      aria-checked="false"
+      disabled={$numChannels$ == 0}>
       <span>{btnText}</span>
     </button>
 
-    <Fader
-      label="main"
-      on:fader={handleMainVolume}></Fader>
+    <MainStrip label="Main" />
   </div>
 </div>
 
@@ -67,15 +61,12 @@
   button {
     margin: 5px;
   }
-  #main-strip :global(input[type='range']) {
-    height: 20em;
-  }
   #main-strip :global(.fader) {
-    border: 1px solid black;
     padding: 2px;
   }
   #main-strip {
     padding-left: 1em;
+    border: 1px solid black;
   }
   #mixer {
     display: flex;
