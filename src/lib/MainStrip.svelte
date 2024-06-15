@@ -55,7 +55,7 @@
       }}>Clear Solo</button>
 
     <button
-      disabled={$mute$ == 0}
+      disabled={$solo$ != 0 || $mute$ == 0}
       on:click={() => {
         $mute$ = 0
       }}>Clear Mute</button>
