@@ -61,5 +61,6 @@
     padding: 3px;
     border: solid black 1px;
     margin-top: 5px;
+    background-color: lightgoldenrodyellow;
   }
 </style>
