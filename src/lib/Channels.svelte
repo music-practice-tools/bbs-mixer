@@ -30,7 +30,7 @@
 
 <div id="channels">
   <FilePicker
-    buttonText="Load"
+    buttonText="Load audio files in a directory"
     on:filesSelected={handleFiles} />
 
   <div id="channel-strips">
