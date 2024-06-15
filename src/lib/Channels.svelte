@@ -30,14 +30,14 @@
 
 <div id="channels">
   <FilePicker
-    buttonText="Load audio files in a directory"
+    buttonText="Load audio files - select a directory"
     on:filesSelected={handleFiles} />
 
   <div id="channel-strips">
     {#each fileHandles as fileHandle}
       <ChannelStrip {fileHandle} />
     {:else}
-      Channel strips appear here when files loaded
+      Channel strips will appear when files are loaded.
     {/each}
   </div>
 </div>

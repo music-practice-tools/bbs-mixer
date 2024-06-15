@@ -1,6 +1,6 @@
 # BBS Mixer
 
-A simple mixer using web audio. See the [demo](https://mixer.musicpracticetools.net)
+A simple mixer using web audio. See the [demo](https://mixer.musicpracticetools.net).
 
 Open a directory and each audio file becomes a mixer channel strip to manage that file. Press play or pause.
 
