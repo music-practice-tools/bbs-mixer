@@ -37,7 +37,8 @@
     {#each fileHandles as fileHandle}
       <ChannelStrip {fileHandle} />
     {:else}
-      Channel strips will appear when files are loaded.
+      <span id="no-strips"
+        >Channel strips will appear when audio files are loaded.</span>
     {/each}
   </div>
 </div>
@@ -54,5 +55,10 @@
   }
   #channels :global(button) {
     margin: 4px;
+  }
+  #no-strips {
+    font-weight: bolder;
+    font-size: x-large;
+    padding: 1em;
   }
 </style>

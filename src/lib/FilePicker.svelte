@@ -52,7 +52,6 @@
   }
 
   function handleChange() {
-    console.log(files)
     dispatch('filesSelected', files)
   }
   function handleCancel() {

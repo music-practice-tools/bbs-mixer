@@ -50,6 +50,7 @@
     muteAudio(mute)
     doMute(mute)
   }
+  // order is important
   $: doMute$($mute$)
 
   let savedGain
@@ -74,9 +75,9 @@
     }
   }
 
-  function doMute$(mute$) {
-    if (mute$ == 0) {
-      mute = 0
+  function doMute$(muteS) {
+    if (muteS == 0) {
+      mute = false
     }
   }
 
@@ -89,18 +90,19 @@
   }
 
   let savedMute
-  function doSolo$(solo$) {
-    muteDisabled = solo$ > 0
-    if (solo$ > 0 && savedMute === undefined) {
+  function doSolo$(soloS) {
+    muteDisabled = soloS > 0
+    if (soloS > 0 && savedMute === undefined) {
       savedMute = mute
-    } else if (solo$ == 0 && savedMute !== undefined) {
+    } else if (soloS == 0 && savedMute !== undefined) {
+      console.log('restore', savedMute)
       mute = savedMute
       savedMute = undefined
     }
-    if (solo$ > 0) {
+    if (soloS > 0) {
       mute = !solo
     }
-    if (solo$ == 0) {
+    if (soloS == 0) {
       solo = false
     }
   }
