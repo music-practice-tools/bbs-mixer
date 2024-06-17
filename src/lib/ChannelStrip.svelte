@@ -8,7 +8,7 @@
 </script>
 
 <script>
-  import { onMount } from 'svelte'
+  import { onMount, onDestroy } from 'svelte'
   import { getContext } from 'svelte'
 
   import Fader from '$lib/Fader.svelte'
@@ -20,6 +20,7 @@
   const mainBus = getContext('mainBus')
 
   let audioElement
+  let track
   let gainNode
   let label = ''
   let mute = undefined
@@ -32,10 +33,19 @@
   label = filename.substring(0, filename.lastIndexOf('.')) || filename
   src = URL.createObjectURL(fileHandle) // TODO see if need to free on delete
 
+  channelNo = channelNo + 1
+
   onMount(() => {
-    const track = audioContext.createMediaElementSource(audioElement)
+    track = audioContext.createMediaElementSource(audioElement)
     gainNode = audioContext.createGain()
     track.connect(gainNode).connect(mainBus.gainNode)
+  })
+
+  onDestroy(() => {
+    // not sure if needed - assume nodes and source are GCd
+    track.disconnect()
+    gainNode.disconnect()
+    channelNo = channelNo - 1
   })
 
   function handleFader(event) {
@@ -108,7 +118,7 @@
 
 <div
   class="channel"
-  id={'channel_' + ++channelNo}>
+  id={'channel_' + channelNo}>
   <audio
     {src}
     bind:paused

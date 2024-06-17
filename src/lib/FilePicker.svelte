@@ -46,6 +46,7 @@
 
   let input
   let files = []
+
   async function handleButton() {
     files = await filePicker()
     dispatch('filesSelected', files)

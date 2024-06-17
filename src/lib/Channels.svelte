@@ -16,6 +16,8 @@
 
 <script>
   import { setContext } from 'svelte'
+  import { tick } from 'svelte'
+
   import ChannelStrip from '$lib/ChannelStrip.svelte'
   import FilePicker from '$lib/FilePicker.svelte'
 
@@ -23,8 +25,12 @@
 
   let fileHandles = []
   function handleFiles(event) {
-    fileHandles = event.detail
-    numChannels$.set(fileHandles.length)
+    fileHandles = []
+    // ensure all get deleted before we add
+    tick().then(() => {
+      fileHandles = event.detail
+      numChannels$.set(fileHandles.length)
+    })
   }
 </script>
 
