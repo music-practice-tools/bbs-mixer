@@ -68,8 +68,7 @@
       type="file"
       webkitdirectory
       id="files"
-      name="files"
-      accept=".mp3"
+      accept="audio/*"
       bind:this={input}
       bind:files
       on:change={handleChange}
