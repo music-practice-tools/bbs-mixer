@@ -4,7 +4,7 @@
   export const solo$ = writable(0)
   export const mute$ = writable(0)
 
-  let numChannels = 0
+  let channelNo = 0
 </script>
 
 <script>
@@ -14,8 +14,6 @@
   import Fader from '$lib/Fader.svelte'
 
   export let fileHandle
-
-  let channelNo = ++numChannels
 
   const transport$ = getContext('transport$')
   const audioContext = getContext('audioContext')
@@ -110,7 +108,7 @@
 
 <div
   class="channel"
-  id={'channel_' + channelNo}>
+  id={'channel_' + ++channelNo}>
   <audio
     {src}
     bind:paused
