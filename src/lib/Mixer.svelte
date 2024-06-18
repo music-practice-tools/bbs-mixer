@@ -2,7 +2,8 @@
   import { setContext } from 'svelte'
   import { writable } from 'svelte/store'
 
-  import Channels, { actions, numChannels$ } from '$lib/Channels.svelte'
+  import Transport, { transport$ } from '$lib/Transport.svelte'
+  import Channels, { numChannels$ } from '$lib/Channels.svelte'
   import MainStrip from '$lib/MainStrip.svelte'
 
   let audioContext
@@ -23,6 +24,8 @@
   const mainBus = audioContext.createGain()
   mainBus.gain.value = 1.0
   setContext('mainBus', mainBus) // share
+  setContext('numChannels$', numChannels$)
+  setContext('transport$', transport$)
 
   function handlePlay(event) {
     if (audioContext.state === 'suspended') {
@@ -39,14 +42,7 @@
   <Channels />
 
   <div id="main-strip">
-    <button
-      data-playing={isPaused ? 'false' : 'true'}
-      on:click={handlePlay}
-      role="switch"
-      aria-checked="false"
-      disabled={$numChannels$ == 0}>
-      <span>{btnText}</span>
-    </button>
+    <Transport></Transport>
 
     <MainStrip label="Main" />
   </div>

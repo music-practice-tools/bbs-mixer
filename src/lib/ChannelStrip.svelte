@@ -9,9 +9,9 @@
 
   export let fileHandle
 
-  const transport$ = getContext('transport$')
   const audioContext = getContext('audioContext')
   const mainBus = getContext('mainBus')
+  const transport$ = getContext('transport$')
 
   let audioElement
   let audio
