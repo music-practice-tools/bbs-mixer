@@ -14,22 +14,26 @@
   export let output
   export let hasSolo = true
 
-  let gainNode
   let mute = undefined
   let muteDisabled = false
   let solo = undefined
 
+  let gainNode
+  let muteNode
+
   $: {
     if (input !== undefined && output !== undefined && gainNode === undefined) {
       gainNode = audioContext.createGain()
-      input.connect(gainNode).connect(output)
+      muteNode = audioContext.createGain()
+      input.connect(gainNode).connect(muteNode).connect(output)
     }
   }
 
   onDestroy(() => {
-    // not sure if needed - assume nodes and source are GCd
+    // I doubt this is needed - assume nodes and source are GCd
     input.disconnect()
     gainNode.disconnect()
+    muteNode.disconnect()
   })
 
   function handleFader(event) {
@@ -47,17 +51,12 @@
 
   let savedGain
   function muteAudio(on) {
-    if (!gainNode) {
+    if (!muteNode || on === undefined) {
       return
     }
 
-    if (on) {
-      savedGain = gainNode.gain.value
-      gainNode.gain.value = 0
-    } else {
-      gainNode.gain.value = savedGain ?? 1
-      savedGain = undefined
-    }
+    const value = on ? 0 : 1
+    muteNode.gain.setTargetAtTime(value, audioContext.currentTime, 0.05)
   }
 
   function doMute(mute) {
@@ -71,6 +70,7 @@
   function doMute$(muteS) {
     if (muteS == 0) {
       mute = false
+      muteAudio(mute)
     }
   }
 
