@@ -8,6 +8,16 @@
 
 <div class="fader">
   <div style="display:flex">
+    <datalist class="markers">
+      <option>-</option>
+      <option>-</option>
+      <option>-</option>
+      <option>-</option>
+      <option>-</option>
+      <option class="unity">-</option>
+      <option>-</option>
+    </datalist>
+
     <input
       type="range"
       id="volume"
@@ -57,6 +67,8 @@
     vertical-align: top;
   }
   .label {
+    height: 2.4em;
+    overflow: hidden;
     width: fit-content;
     padding: 3px;
     border: solid black 1px;
