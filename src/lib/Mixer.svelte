@@ -1,9 +1,9 @@
 <script>
   import { setContext } from 'svelte'
+  import { writable } from 'svelte/store'
 
   import Channels, { actions, numChannels$ } from '$lib/Channels.svelte'
   import MainStrip from '$lib/MainStrip.svelte'
-  import { solo$, mute$ } from '$lib/ChannelStrip.svelte'
 
   let audioContext
   let isPaused = true
@@ -16,10 +16,13 @@
   audioContext = new AudioContext()
 
   setContext('audioContext', audioContext) // share
-  const mainBus = {}
-  setContext('mainBus', mainBus) // share
+  const solo$ = writable(0)
+  const mute$ = writable(0)
   setContext('solo$', solo$)
   setContext('mute$', mute$)
+  const mainBus = audioContext.createGain()
+  mainBus.gain.value = 1.0
+  setContext('mainBus', mainBus) // share
 
   function handlePlay(event) {
     if (audioContext.state === 'suspended') {
@@ -29,10 +32,6 @@
     let button = event.currentTarget
     isPaused = button.dataset.playing === 'true'
     actions[isPaused ? 'pause' : 'play']()
-  }
-
-  function handleMainVolume(event) {
-    gainNode.gain.value = event.detail
   }
 </script>
 

@@ -32,13 +32,19 @@
       numChannels$.set(fileHandles.length)
     })
   }
+
+  function handleClear(event) {
+    fileHandles = []
+  }
 </script>
 
 <div id="channels">
-  <FilePicker
-    buttonText="Load audio files - select a directory"
-    on:filesSelected={handleFiles} />
-
+  <div id="buttons">
+    <FilePicker
+      buttonText="Load directory of audio files"
+      on:filesSelected={handleFiles} />
+    <button on:click={handleClear}>Clear</button>
+  </div>
   <div id="channel-strips">
     {#each fileHandles as fileHandle}
       <ChannelStrip {fileHandle} />
@@ -50,6 +56,10 @@
 </div>
 
 <style>
+  #buttons {
+    display: flex;
+    justify-content: flex-start;
+  }
   #channels {
     border: 1px solid black;
     padding: 2px;
