@@ -3,8 +3,6 @@
 
   import Strip from '$lib/Strip.svelte'
 
-  export let label
-
   const audioContext = getContext('audioContext')
   const mainBus = getContext('mainBus')
   const solo$ = getContext('solo$')
@@ -12,7 +10,7 @@
 </script>
 
 <Strip
-  {label}
+  label="Main"
   id="main"
   hasSolo={false}
   input={mainBus}

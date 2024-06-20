@@ -103,8 +103,9 @@
 <div
   class="channel"
   {id}>
-  <slot></slot>
-
+  <div class="slot">
+    <slot></slot>
+  </div>
   <div class="controls">
     {#if hasSolo}
       <label
@@ -131,8 +132,17 @@
   .channel {
     max-width: 70px;
     min-width: 70px;
+    margin: 5px;
   }
   .channel :global(input[type='range']) {
     height: 20em;
+  }
+  .slot {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+  }
+  .controls {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
   }
 </style>

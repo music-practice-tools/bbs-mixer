@@ -1,53 +1,73 @@
-<script context="module">
-  import { writable } from 'svelte/store'
-
-  export const transport$ = writable('pause')
-</script>
-
 <script>
-  import { getContext } from 'svelte'
+  import { getContext, tick } from 'svelte'
+  import { progress$ } from '$lib/Channels.svelte'
 
-  const actions = {
-    play: function () {
-      transport$.set('play')
-    },
-    pause: function () {
-      transport$.set('pause')
-    },
-  }
-
+  export let canPlay = false
   let isPaused = true
-  $: btnText = isPaused ? 'Play' : 'Pause'
 
   const audioContext = getContext('audioContext')
-  const numChannels$ = getContext('numChannels$')
+  const mediaAction$ = getContext('mediaAction$')
 
   function handlePlay(event) {
     if (audioContext.state === 'suspended') {
-      audioContext.resume() // browser autoplay policy at work
+      // browser autoplay policy at work
+      audioContext.resume()
     }
 
-    let button = event.currentTarget
-    isPaused = button.dataset.playing === 'true'
-    actions[isPaused ? 'pause' : 'play']()
+    isPaused = !isPaused
+    $mediaAction$ = isPaused ? 'pause' : 'play'
+  }
+
+  function handleSkipBack(event) {
+    const prevAction = $mediaAction$
+    $mediaAction$ = 'skipback'
+    // revert so doesn't get stuck
+    tick().then(() => {
+      $mediaAction$ = prevAction
+    })
   }
 </script>
 
 <div id="transport">
-  <button
-    data-playing={isPaused ? 'false' : 'true'}
-    on:click={handlePlay}
-    role="switch"
-    aria-checked="false"
-    disabled={$numChannels$ == 0}>
-    <span>{btnText}</span>
-  </button>
+  <div>
+    <button
+      on:click={handleSkipBack}
+      disabled={!canPlay}>
+      &#x23EE;</button>
+    <button
+      id="play"
+      on:click={handlePlay}
+      role="switch"
+      aria-checked={isPaused ? 'false' : 'true'}
+      disabled={!canPlay}>
+      <span>{isPaused ? '\u{23F5}' : '\u{23F8}'}</span>
+    </button>
+    <label
+      for="play"
+      class="switch">Playing</label>
+  </div>
+  <input
+    id="progress"
+    type="range"
+    disabled
+    min="0"
+    value={$progress$.current ?? 0}
+    max={$progress$.duration ?? 0} />
 </div>
-
-<div></div>
 
 <style>
   button {
     margin: 5px;
+    font-size: x-large;
+  }
+  label[for='play'] {
+    opacity: 0;
+    width: 0;
+  }
+  #transport {
+    border: 1px solid black;
+  }
+  button[disabled] {
+    color: red;
   }
 </style>

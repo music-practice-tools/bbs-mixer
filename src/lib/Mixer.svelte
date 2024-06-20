@@ -2,13 +2,14 @@
   import { setContext } from 'svelte'
   import { writable } from 'svelte/store'
 
-  import Transport, { transport$ } from '$lib/Transport.svelte'
-  import Channels, { numChannels$ } from '$lib/Channels.svelte'
+  import Channels from '$lib/Channels.svelte'
+  import Transport from '$lib/Transport.svelte'
+  import { mediaAction$ } from '$lib/ChannelStrip.svelte'
   import MainStrip from '$lib/MainStrip.svelte'
 
   let audioContext
-  let isPaused = true
-  $: btnText = isPaused ? 'Play' : 'Pause'
+  let canPlay = false
+  let progress = undefined
 
   const AudioContext =
     window.AudioContext || // Default
@@ -24,40 +25,29 @@
   const mainBus = audioContext.createGain()
   mainBus.gain.value = 1.0
   setContext('mainBus', mainBus) // share
-  setContext('numChannels$', numChannels$)
-  setContext('transport$', transport$)
-
-  function handlePlay(event) {
-    if (audioContext.state === 'suspended') {
-      audioContext.resume() // browser autoplay policy at work
-    }
-
-    let button = event.currentTarget
-    isPaused = button.dataset.playing === 'true'
-    actions[isPaused ? 'pause' : 'play']()
-  }
+  setContext('mediaAction$', mediaAction$)
 </script>
 
+<!-- /*(event) => console.log(event, event.detail)}*/ -->
 <div id="mixer">
-  <Channels />
-
-  <div id="main-strip">
-    <Transport></Transport>
-
-    <MainStrip label="Main" />
-  </div>
+  <Channels
+    on:canplay={({ detail }) => {
+      canPlay = detail
+    }}
+    on:progress></Channels>
+  <MainStrip />
+  <Transport
+    {canPlay}
+    {progress}></Transport>
 </div>
 
 <div></div>
 
 <style>
-  button {
-    margin: 5px;
-  }
-  #main-strip :global(.fader) {
+  :global(#main .fader) {
     padding: 2px;
   }
-  #main-strip {
+  :global(#main) {
     padding-left: 1em;
     border: 1px solid black;
   }
@@ -67,5 +57,8 @@
   }
   :global(#channels) {
     width: 90vw;
+  }
+  :global(#transport) {
+    height: 5em;
   }
 </style>

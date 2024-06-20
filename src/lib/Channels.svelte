@@ -1,28 +1,54 @@
 <script context="module">
   import { writable } from 'svelte/store'
 
-  export const numChannels$ = writable(0)
+  export const progress$ = writable([])
 </script>
 
 <script>
-  import { setContext } from 'svelte'
-  import { tick } from 'svelte'
+  import { tick, createEventDispatcher } from 'svelte'
 
   import ChannelStrip from '$lib/ChannelStrip.svelte'
   import FilePicker from '$lib/FilePicker.svelte'
 
   let fileHandles = []
+  let channelRefs = []
+
   function handleFiles(event) {
     fileHandles = []
-    // ensure all get deleted before we add
+    channelRefs = []
     tick().then(() => {
+      // ensure all get deleted before we add
       fileHandles = event.detail
-      numChannels$.set(fileHandles.length)
     })
+    // canplay will be sent via handleReady
   }
 
   function handleClear(event) {
     fileHandles = []
+    channelRefs = []
+    dispatch('canplay', false)
+  }
+
+  const dispatch = createEventDispatcher()
+
+  function handleReady(event) {
+    event.stopImmediatePropagation()
+    const notReady = channelRefs.filter((ref) => {
+      return !ref.getProgress().ready
+    })
+    if (notReady.length == 0) {
+      const longest = channelRefs.reduce((acc, cur, i, arr) => {
+        const duration = cur.getProgress().duration
+        return duration > acc.duration ? { ref: cur, duration } : acc
+      })
+      longest.$set({ monitorProgress: true })
+      dispatch('canplay', true)
+    }
+  }
+
+  function handleProgress(event) {
+    event.stopImmediatePropagation()
+    $progress$ = event.detail
   }
 </script>
 
@@ -34,8 +60,12 @@
     <button on:click={handleClear}>Clear</button>
   </div>
   <div id="channel-strips">
-    {#each fileHandles as fileHandle}
-      <ChannelStrip {fileHandle} />
+    {#each fileHandles as fileHandle, i}
+      <ChannelStrip
+        bind:this={channelRefs[i]}
+        on:ready={handleReady}
+        on:progress={handleProgress}
+        {fileHandle} />
     {:else}
       <span id="no-strips"
         >Channel strips will appear when audio files are loaded.</span>
