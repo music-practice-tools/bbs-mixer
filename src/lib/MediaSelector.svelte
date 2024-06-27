@@ -29,6 +29,9 @@
 </div>
 
 <style>
+  #media-selector {
+    border: 1px solid black;
+  }
   #buttons {
     border: 1px solid black;
     padding: 2px;

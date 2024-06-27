@@ -61,6 +61,7 @@
   .switch {
     opacity: 0;
     width: 0px;
+    display: inline-block;
   }
   #transport {
     border: 1px solid black;

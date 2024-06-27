@@ -32,4 +32,8 @@
   button {
     font-size: x-small;
   }
+  :global(#main) {
+    margin: 0px;
+    margin-left: 5px;
+  }
 </style>
