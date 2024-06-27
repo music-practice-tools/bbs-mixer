@@ -1,38 +1,27 @@
-<script context="module">
-  import { writable } from 'svelte/store'
-
-  export const progress$ = writable([])
-</script>
-
 <script>
-  import { tick, createEventDispatcher } from 'svelte'
+  import { createEventDispatcher } from 'svelte'
 
+  import MediaSelector from '$lib/MediaSelector.svelte'
+  import Transport from '$lib/Transport.svelte'
   import ChannelStrip from '$lib/ChannelStrip.svelte'
-  import FilePicker from '$lib/FilePicker.svelte'
-
-  let fileHandles = []
-  let channelRefs = []
-
-  function handleFiles(event) {
-    fileHandles = []
-    channelRefs = []
-    tick().then(() => {
-      // ensure all get deleted before we add
-      fileHandles = event.detail
-    })
-    // canplay will be sent via handleReady
-  }
-
-  function handleClear(event) {
-    fileHandles = []
-    channelRefs = []
-    dispatch('canplay', false)
-  }
 
   const dispatch = createEventDispatcher()
+  let fileHandles = []
+  let channelRefs = []
+  let canPlay = false
+  let progress = { duration: undefined, progress: undefined }
+
+  function handleMediaSelected({ detail: { media } }) {
+    if (media.length == 0) {
+      fileHandles = []
+      canPlay = false
+    } else {
+      fileHandles = media
+      // canPlay will be sent via handleReady
+    }
+  }
 
   function handleReady(event) {
-    event.stopImmediatePropagation()
     const notReady = channelRefs.filter((ref) => {
       return !ref.getProgress().ready
     })
@@ -42,23 +31,23 @@
         return duration > acc.duration ? { ref: cur, duration } : acc
       })
       longest.$set({ monitorProgress: true })
-      dispatch('canplay', true)
+      canPlay = true
     }
   }
 
   function handleProgress(event) {
-    event.stopImmediatePropagation()
-    $progress$ = event.detail
+    progress = event.detail
   }
 </script>
 
 <div id="channels">
-  <div id="buttons">
-    <FilePicker
-      buttonText="Load directory of audio files"
-      on:filesSelected={handleFiles} />
-    <button on:click={handleClear}>Clear</button>
+  <div id="controls">
+    <MediaSelector on:mediaSelected={handleMediaSelected}></MediaSelector>
+    <Transport
+      {canPlay}
+      {progress}></Transport>
   </div>
+
   <div id="channel-strips">
     {#each fileHandles as fileHandle, i}
       <ChannelStrip
@@ -74,13 +63,12 @@
 </div>
 
 <style>
-  #buttons {
-    display: flex;
-    justify-content: flex-start;
-  }
   #channels {
     border: 1px solid black;
     padding: 2px;
+  }
+  #controls {
+    display: flex;
   }
   #channel-strips {
     display: flex;

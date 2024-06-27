@@ -1,8 +1,8 @@
 <script>
   import { getContext, tick } from 'svelte'
-  import { progress$ } from '$lib/Channels.svelte'
 
   export let canPlay = false
+  export let progress = { duration: 0, progress: 0 }
   let isPaused = true
 
   const audioContext = getContext('audioContext')
@@ -29,30 +29,28 @@
 </script>
 
 <div id="transport">
-  <div>
-    <button
-      on:click={handleSkipBack}
-      disabled={!canPlay}>
-      &#x23EE;</button>
-    <button
-      id="play"
-      on:click={handlePlay}
-      role="switch"
-      aria-checked={isPaused ? 'false' : 'true'}
-      disabled={!canPlay}>
-      <span>{isPaused ? '\u{23F5}' : '\u{23F8}'}</span>
-    </button>
-    <label
-      for="play"
-      class="switch">Playing</label>
-  </div>
+  <button
+    on:click={handleSkipBack}
+    disabled={!canPlay}>
+    &#x23EE;</button>
+  <button
+    id="play"
+    on:click={handlePlay}
+    role="switch"
+    aria-checked={isPaused ? 'false' : 'true'}
+    disabled={!canPlay}>
+    <span>{isPaused ? '\u{23F5}' : '\u{23F8}'}</span>
+  </button>
+  <label
+    for="play"
+    class="switch">Playing</label>
   <input
     id="progress"
     type="range"
     disabled
     min="0"
-    value={$progress$.current ?? 0}
-    max={$progress$.duration ?? 0} />
+    value={progress.current ?? 0}
+    max={progress.duration ?? 0} />
 </div>
 
 <style>
@@ -60,14 +58,15 @@
     margin: 5px;
     font-size: x-large;
   }
-  label[for='play'] {
+  .switch {
     opacity: 0;
-    width: 0;
+    width: 0px;
   }
   #transport {
     border: 1px solid black;
+    margin-left: 2px;
   }
   button[disabled] {
-    color: red;
+    color: lightgrey;
   }
 </style>

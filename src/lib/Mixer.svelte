@@ -3,13 +3,10 @@
   import { writable } from 'svelte/store'
 
   import Channels from '$lib/Channels.svelte'
-  import Transport from '$lib/Transport.svelte'
   import { mediaAction$ } from '$lib/ChannelStrip.svelte'
   import MainStrip from '$lib/MainStrip.svelte'
 
   let audioContext
-  let canPlay = false
-  let progress = undefined
 
   const AudioContext =
     window.AudioContext || // Default
@@ -30,15 +27,8 @@
 
 <!-- /*(event) => console.log(event, event.detail)}*/ -->
 <div id="mixer">
-  <Channels
-    on:canplay={({ detail }) => {
-      canPlay = detail
-    }}
-    on:progress></Channels>
-  <MainStrip />
-  <Transport
-    {canPlay}
-    {progress}></Transport>
+  <Channels></Channels>
+  <MainStrip></MainStrip>
 </div>
 
 <div></div>
@@ -57,8 +47,5 @@
   }
   :global(#channels) {
     width: 90vw;
-  }
-  :global(#transport) {
-    height: 5em;
   }
 </style>

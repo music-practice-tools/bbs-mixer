@@ -60,10 +60,10 @@
   }
 </script>
 
-{#if window.showDirectoryPicker}
-  <button on:click={handleButton}> {buttonText} </button>
-{:else}
-  <div>
+<div class="file-picker">
+  {#if window.showDirectoryPicker}
+    <button on:click={handleButton}> {buttonText} </button>
+  {:else}
     <button on:click={input.click()}>{buttonText}</button>
     <input
       type="file"
@@ -74,8 +74,8 @@
       bind:files
       on:change={handleChange}
       on:cancel={handleCancel} />
-  </div>
-{/if}
+  {/if}
+</div>
 
 <style>
   input {
