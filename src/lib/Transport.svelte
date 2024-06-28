@@ -67,9 +67,6 @@
     width: 0px;
     display: inline-block;
   }
-  button[disabled] {
-    color: lightgrey;
-  }
   .component {
     padding-left: 1em;
     padding-right: 1em;
