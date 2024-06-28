@@ -14,6 +14,9 @@
   channelNo = channelNo + 1
   const thisChannelNo = channelNo
 
+  export let className = 'strip channel-strip'
+  export let id = 'channel-' + channelNo
+
   export let fileHandle
   export let monitorProgress = false
   export function getProgress() {
@@ -88,8 +91,9 @@
   on:canplay={handleReady}></audio>
 
 <Strip
+  {id}
+  {className}
   {label}
-  id={'channel_' + channelNo}
   input={audio}
   output={mainBus}>
 </Strip>

@@ -5,6 +5,9 @@
   import Transport from '$lib/Transport.svelte'
   import ChannelStrip from '$lib/ChannelStrip.svelte'
 
+  export let className = 'channels'
+  export let id = 'channels'
+
   const dispatch = createEventDispatcher()
   let fileHandles = []
   let channelRefs = []
@@ -40,7 +43,9 @@
   }
 </script>
 
-<div id="channels">
+<div
+  {id}
+  class="component {className}">
   <div id="controls">
     <MediaSelector on:mediaSelected={handleMediaSelected}></MediaSelector>
     <Transport
@@ -57,16 +62,12 @@
         {fileHandle} />
     {:else}
       <span id="no-strips"
-        >Channel strips will appear when audio files are loaded.</span>
+        >Track controls will appear here when audio files are loaded.</span>
     {/each}
   </div>
 </div>
 
 <style>
-  #channels {
-    border: 1px solid black;
-    padding: 2px;
-  }
   #controls {
     display: flex;
   }

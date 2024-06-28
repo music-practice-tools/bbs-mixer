@@ -6,6 +6,9 @@
   import { mediaAction$ } from '$lib/ChannelStrip.svelte'
   import MainStrip from '$lib/MainStrip.svelte'
 
+  export let className = 'mixer'
+  export let id = 'mixer'
+
   let audioContext
 
   const AudioContext =
@@ -26,26 +29,34 @@
 </script>
 
 <!-- /*(event) => console.log(event, event.detail)}*/ -->
-<div id="mixer">
+<div
+  {id}
+  class="component {className}">
   <Channels></Channels>
   <MainStrip></MainStrip>
 </div>
 
-<div></div>
-
 <style>
-  :global(#main .fader) {
+  :global(.component) {
+    border: 1px solid black;
+    padding: 2px;
+    border-radius: 4px;
+  }
+  :global(.fader) {
     padding: 2px;
   }
   :global(#main) {
     padding-left: 1em;
-    border: 1px solid black;
+  }
+  :global(#transport) {
+    margin-left: 1em;
+  }
+  :global(#channels) {
+    width: 90vw;
   }
   #mixer {
     display: flex;
     width: 98vw;
-  }
-  :global(#channels) {
-    width: 90vw;
+    padding: 0.5em;
   }
 </style>

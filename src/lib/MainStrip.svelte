@@ -3,6 +3,9 @@
 
   import Strip from '$lib/Strip.svelte'
 
+  export let className = 'strip main-strip'
+  export let id = 'main'
+
   const audioContext = getContext('audioContext')
   const mainBus = getContext('mainBus')
   const solo$ = getContext('solo$')
@@ -10,8 +13,9 @@
 </script>
 
 <Strip
+  {id}
+  {className}
   label="Main"
-  id="main"
   hasSolo={false}
   input={mainBus}
   output={audioContext.destination}>

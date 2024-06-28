@@ -1,12 +1,16 @@
 <script>
   import { createEventDispatcher } from 'svelte'
 
+  export let className = 'fader'
+  export let id
   export let label = ''
 
   const dispatch = createEventDispatcher()
 </script>
 
-<div class="fader">
+<div
+  {id}
+  class="element {className}">
   <div style="display:flex">
     <datalist class="markers">
       <option>-</option>
@@ -72,6 +76,7 @@
     width: fit-content;
     padding: 3px;
     border: solid black 1px;
+    border-radius: 3px;
     margin-top: 5px;
     background-color: lightgoldenrodyellow;
   }

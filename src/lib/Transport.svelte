@@ -1,6 +1,8 @@
 <script>
   import { getContext, tick } from 'svelte'
 
+  export let className = 'transport'
+  export let id = 'transport'
   export let canPlay = false
   export let progress = { duration: 0, progress: 0 }
   let isPaused = true
@@ -28,7 +30,9 @@
   }
 </script>
 
-<div id="transport">
+<div
+  {id}
+  class="component {className}">
   <button
     on:click={handleSkipBack}
     disabled={!canPlay}>
@@ -55,19 +59,24 @@
 
 <style>
   button {
-    margin: 5px;
-    font-size: x-large;
+    margin: 4px;
+    font-size: large;
   }
   .switch {
     opacity: 0;
     width: 0px;
     display: inline-block;
   }
-  #transport {
-    border: 1px solid black;
-    margin-left: 2px;
-  }
   button[disabled] {
     color: lightgrey;
+  }
+  .component {
+    padding-left: 1em;
+    padding-right: 1em;
+    display: flex;
+    align-items: center;
+  }
+  #progress {
+    width: 20em;
   }
 </style>

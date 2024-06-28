@@ -3,6 +3,9 @@
 
   import FilePicker from '$lib/FilePicker.svelte'
 
+  export let className = 'media-selector'
+  export let id = 'media-selector'
+
   const dispatch = createEventDispatcher()
 
   function handleFiles(event) {
@@ -18,9 +21,11 @@
   }
 </script>
 
-<div id="media-selector">
+<div
+  {id}
+  class="component {className}">
   <fieldset id="buttons">
-    <legend>Select media to play</legend>
+    <legend>Select tracks</legend>
     <FilePicker
       buttonText="Directory"
       on:filesSelected={handleFiles} />
@@ -29,13 +34,11 @@
 </div>
 
 <style>
-  #media-selector {
-    border: 1px solid black;
-  }
   #buttons {
-    border: 1px solid black;
-    padding: 2px;
     display: flex;
     justify-content: flex-start;
+  }
+  fieldset {
+    border: 0px;
   }
 </style>

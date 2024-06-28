@@ -8,8 +8,9 @@
   const solo$ = getContext('solo$')
   const mute$ = getContext('mute$')
 
-  export let label = ''
-  export let id = ''
+  export let id
+  export let className = 'strip'
+  export let label
   export let input
   export let output
   export let hasSolo = true
@@ -101,7 +102,7 @@
 </script>
 
 <div
-  class="channel"
+  class="component {className}"
   {id}>
   <div class="slot">
     <slot></slot>
@@ -129,12 +130,12 @@
 </div>
 
 <style>
-  .channel {
+  .strip {
     max-width: 70px;
     min-width: 70px;
     margin: 5px;
   }
-  .channel :global(input[type='range']) {
+  .strip :global(input[type='range']) {
     height: 20em;
   }
   .slot {
