@@ -38,8 +38,8 @@
 
 <style>
   :global(.component) {
-    border: 1px solid black;
-    padding: 2px;
+    border: 2px solid gray;
+    padding: 3px;
     border-radius: 4px;
   }
   :global(.fader) {
@@ -48,15 +48,30 @@
   :global(#main) {
     padding-left: 1em;
   }
+  :global(#media-selector) {
+    margin-left: 5px;
+  }
   :global(#transport) {
     margin-left: 1em;
   }
   :global(#channels) {
+    border: 0px;
     width: 90vw;
   }
   #mixer {
     display: flex;
     width: 98vw;
     padding: 0.5em;
+  }
+  :global(.media-selector),
+  :global(.main-strip),
+  :global(.transport) {
+    background-color: lightgray;
+  }
+  :global(.channel-strip):nth-of-type(odd) {
+    background-color: lightgray;
+  }
+  :global(.channel-strip):nth-of-type(even) {
+    background-color: silver;
   }
 </style>

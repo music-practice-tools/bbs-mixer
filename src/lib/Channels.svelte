@@ -62,7 +62,7 @@
         {fileHandle} />
     {:else}
       <span id="no-strips"
-        >Track controls will appear here when audio files are loaded.</span>
+        >Mixer channel controls will appear here when audio files are loaded.</span>
     {/each}
   </div>
 </div>
