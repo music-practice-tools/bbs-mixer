@@ -7,20 +7,20 @@
 
   export let className = 'channels'
   export let id = 'channels'
+  export let canPlay = false
 
-  const dispatch = createEventDispatcher()
   let fileHandles = []
   let channelRefs = []
-  let canPlay = false
-  let progress = { duration: undefined, progress: undefined }
+  let progress = { duration: 0, progress: 0 }
 
   function handleMediaSelected({ detail: { media } }) {
     if (media.length == 0) {
       fileHandles = []
       canPlay = false
+      progress = { duration: 0, progress: 0 }
     } else {
       fileHandles = media
-      // canPlay will be sent via handleReady
+      // canPlay will be set via handleReady
     }
   }
 
@@ -33,13 +33,14 @@
         const duration = cur.getProgress().duration
         return duration > acc.duration ? { ref: cur, duration } : acc
       })
-      longest.$set({ monitorProgress: true })
+      longest.$set({ monitorProgress: true }) //$set is a svelte thing to set a prop
       canPlay = true
     }
   }
 
-  function handleProgress(event) {
-    progress = event.detail
+  function handleProgress({ detail }) {
+    const { duration, current } = detail
+    progress = { duration, progress: current }
   }
 </script>
 
@@ -62,7 +63,7 @@
         {fileHandle} />
     {:else}
       <span id="no-strips"
-        >Mixer channel controls will appear here when audio files are loaded.</span>
+        >Mixer controls will appear once audio tracks are loaded.</span>
     {/each}
   </div>
 </div>

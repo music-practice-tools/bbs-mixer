@@ -26,14 +26,16 @@
   mainBus.gain.value = 1.0
   setContext('mainBus', mainBus) // share
   setContext('mediaAction$', mediaAction$)
+
+  let canPlay = false
 </script>
 
 <!-- /*(event) => console.log(event, event.detail)}*/ -->
 <div
   {id}
   class="component {className}">
-  <Channels></Channels>
-  <MainStrip></MainStrip>
+  <Channels bind:canPlay></Channels>
+  <MainStrip {canPlay}></MainStrip>
 </div>
 
 <style>

@@ -14,9 +14,10 @@
   channelNo = channelNo + 1
   const thisChannelNo = channelNo
 
+  const dispatch = createEventDispatcher()
+
   export let className = 'strip channel-strip'
   export let id = 'channel-' + channelNo
-
   export let fileHandle
   export let monitorProgress = false
   export function getProgress() {
@@ -28,15 +29,20 @@
       current: elemReady ? audioElement.currentTime : 0,
     }
   }
-
-  const dispatch = createEventDispatcher()
+  export function moveTo({ detail: current }) {
+    if (audioElement) {
+      audioElement.currentTime = current
+      dispatch('progress', getProgress())
+    }
+  }
 
   $: {
     if (monitorProgress && audioElement) {
+      dispatch('progress', getProgress())
       audioElement.ontimeupdate = () => {
         dispatch('progress', getProgress())
       }
-    } else if (audioElement) {
+    } else {
       //audioElement.ontimeupdate = undefined
     }
   }
@@ -51,7 +57,7 @@
   let paused = 'pause'
 
   $: {
-    const verb = $mediaAction$
+    const { verb, detail } = $mediaAction$
     switch (verb) {
       case 'pause':
       case 'play':
@@ -59,6 +65,9 @@
         break
       case 'skipback':
         audioElement.currentTime = 0
+        break
+      case 'scrub':
+        audioElement.currentTime = detail
         break
       case '':
         break
