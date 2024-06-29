@@ -30,12 +30,12 @@
   let canPlay = false
 </script>
 
-<!-- /*(event) => console.log(event, event.detail)}*/ -->
 <div
   {id}
   class="component {className}">
-  <Channels bind:canPlay></Channels>
-  <MainStrip {canPlay}></MainStrip>
+  <Channels bind:canPlay>
+    <MainStrip {canPlay}></MainStrip>
+  </Channels>
 </div>
 
 <style>
@@ -62,7 +62,7 @@
   }
   #mixer {
     display: flex;
-    width: 98vw;
+    width: 95vw;
     padding: 0.5em;
   }
   :global(.media-selector),

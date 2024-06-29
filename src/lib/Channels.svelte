@@ -54,23 +54,31 @@
       {progress}></Transport>
   </div>
 
-  <div id="channel-strips">
-    {#each fileHandles as fileHandle, i}
-      <ChannelStrip
-        bind:this={channelRefs[i]}
-        on:ready={handleReady}
-        on:progress={handleProgress}
-        {fileHandle} />
-    {:else}
-      <span id="no-strips"
-        >Mixer controls will appear once audio tracks are loaded.</span>
-    {/each}
+  <div id="strips">
+    <div id="channel-strips">
+      {#each fileHandles as fileHandle, i}
+        <ChannelStrip
+          bind:this={channelRefs[i]}
+          on:ready={handleReady}
+          on:progress={handleProgress}
+          {fileHandle} />
+      {:else}
+        <span id="no-strips"
+          >Mixer controls will appear once audio tracks are loaded.</span>
+      {/each}
+    </div>
+    <slot></slot>
   </div>
 </div>
 
 <style>
-  #controls {
+  #controls,
+  #strips {
     display: flex;
+    width: 100%;
+  }
+  #strips {
+    justify-content: space-between;
   }
   #channel-strips {
     display: flex;
