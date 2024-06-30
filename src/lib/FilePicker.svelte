@@ -62,7 +62,7 @@
 
 <div class="file-picker">
   {#if window.showDirectoryPicker}
-    <button on:click={handleButton}> {buttonText} </button>
+    <button on:click={handleButton}>{buttonText}</button>
   {:else}
     <button on:click={input.click()}>{buttonText}</button>
     <input

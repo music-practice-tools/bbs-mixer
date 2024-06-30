@@ -7,4 +7,9 @@
 <Mixer />
 
 <style>
+  h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-block: 0.67em;
+  }
 </style>

@@ -1,12 +1,41 @@
 <!doctype html>
 <html lang="en">
 
+
 <head>
 	<meta charset="utf-8" />
 	<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+	<link rel="stylesheet" href="%sveltekit.assets%/preflight.css" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	%sveltekit.head%
 </head>
+
+<style>
+	button {
+		font-weight: 600;
+		font-size: 0.875rem;
+		line-height: 1.25rem;
+		padding-top: 0.375rem;
+		padding-bottom: 0.375rem;
+		padding-left: 0.75rem;
+		padding-right: 0.75rem;
+		-webkit-appearance: button;
+		appearance: button;
+		color: rgb(255 255 255 / 1);
+		background-color: rgb(79 70 229 / 1);
+		border-radius: 9999px;
+
+		--tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+		--tw-ring-offset-shadow: 0 0 #0000;
+		--tw-ring-shadow: 0 0 #0000;
+		box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+	}
+
+	button:disabled {
+		opacity: 0.25;
+		filter: grayscale(80%);
+	}
+</style>
 
 <body data-sveltekit-preload-data="hover">
 	<div style="display: contents">%sveltekit.body%</div>

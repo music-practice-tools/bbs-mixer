@@ -56,8 +56,7 @@
   data-canplay={canPlay}>
   <button
     on:click={handleSkipBack}
-    disabled={!canPlay}>
-    &#x23EE;</button>
+    disabled={!canPlay}><span>&#x23EE;</span></button>
   <button
     id="play"
     on:click={handlePlay}
