@@ -7,7 +7,6 @@
   export let id = 'main'
   export let canPlay = false
 
-  $: console.log(canPlay)
   const audioContext = getContext('audioContext')
   const mainBus = getContext('mainBus')
   const solo$ = getContext('solo$')

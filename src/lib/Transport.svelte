@@ -4,7 +4,7 @@
   export let className = 'transport'
   export let id = 'transport'
   export let canPlay = false
-  export let progress = { duration: 0, progress: 0 }
+  export let progress = { duration: 0, current: 0 }
   let isPaused = true
 
   const audioContext = getContext('audioContext')
@@ -29,25 +29,35 @@
     })
   }
 
-  let scrubbing = false
   const dispatch = createEventDispatcher()
+
+  let scrubbing = false
   function handleScrub({ target: { value } }) {
     $mediaAction$ = { verb: 'scrub', detail: value }
   }
 
+  let isScrubbing = false
   let wasPlaying = false
   function handleScrubSelect(isEnd) {
     if (!isEnd && $mediaAction$.verb == 'play') {
       wasPlaying = $mediaAction$
       $mediaAction$ = { verb: 'pause' }
+      isScrubbing = true
     } else if (isEnd && wasPlaying) {
       $mediaAction$ = wasPlaying
       wasPlaying = false
+      isScrubbing = false
     }
   }
 
-  const formatTime = (seconds) =>
-    new Date(seconds * 1000).toISOString().slice(11, 19)
+  const formatTime = (seconds) => {
+    return new Date(seconds * 1000).toISOString().slice(11, 19)
+  }
+
+  let range
+  $: if (range && !isScrubbing) {
+    range.value = progress.current
+  }
 </script>
 
 <div
@@ -65,13 +75,14 @@
     aria-label={isPaused ? 'play' : 'pause'}>
     <span>{isPaused ? '\u{23F5}' : '\u{23F8}'}</span>
   </button>
-  <div id="current">{formatTime(progress.progress)}</div>
+  <div id="current">{formatTime(progress.current)}</div>
+  <!-- value={progress.current /}-->
   <input
     id="progress"
     type="range"
+    bind:this={range}
     disabled={!canPlay}
     min="0"
-    value={progress.progress}
     max={progress.duration}
     on:mousedown={() => handleScrubSelect(false)}
     on:touchstart={() => handleScrubSelect(false)}

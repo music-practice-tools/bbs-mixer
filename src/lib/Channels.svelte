@@ -11,13 +11,13 @@
 
   let fileHandles = []
   let channelRefs = []
-  let progress = { duration: 0, progress: 0 }
+  let progress = { duration: 0, current: 0, ended: false }
 
   function handleMediaSelected({ detail: { media } }) {
     if (media.length == 0) {
       fileHandles = []
       canPlay = false
-      progress = { duration: 0, progress: 0 }
+      progress = { duration: 0, current: 0, ended: false }
     } else {
       fileHandles = media
       // canPlay will be set via handleReady
@@ -29,18 +29,21 @@
       return !ref.getProgress().ready
     })
     if (notReady.length == 0) {
-      const longest = channelRefs.reduce((acc, cur, i, arr) => {
-        const duration = cur.getProgress().duration
-        return duration > acc.duration ? { ref: cur, duration } : acc
-      })
-      longest.$set({ monitorProgress: true }) //$set is a svelte thing to set a prop
+      const longest = channelRefs.reduce(
+        (acc, cur, i, arr) => {
+          const duration = cur.getProgress().duration
+          return duration > acc.duration ? { ref: arr[i], duration } : acc
+        },
+        { duration: 0 },
+      )
+      longest.ref.$set({ monitorProgress: true }) //$set is a svelte thing to set a prop
       canPlay = true
     }
   }
 
   function handleProgress({ detail }) {
-    const { duration, current } = detail
-    progress = { duration, progress: current }
+    const { duration, current, ended } = detail
+    progress = { duration, current, ended }
   }
 </script>
 

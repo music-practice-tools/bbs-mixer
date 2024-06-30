@@ -1,3 +1,5 @@
+<svelte:options accessors={true} />
+
 <script context="module">
   import { writable } from 'svelte/store'
 
@@ -27,12 +29,7 @@
       ready: elemReady,
       duration: elemReady ? audioElement.duration : 0,
       current: elemReady ? audioElement.currentTime : 0,
-    }
-  }
-  export function moveTo({ detail: current }) {
-    if (audioElement) {
-      audioElement.currentTime = current
-      dispatch('progress', getProgress())
+      ended: audioElement ? audioElement.ended : false,
     }
   }
 
@@ -40,6 +37,9 @@
     if (monitorProgress && audioElement) {
       dispatch('progress', getProgress())
       audioElement.ontimeupdate = () => {
+        dispatch('progress', getProgress())
+      }
+      audioElement.onended = () => {
         dispatch('progress', getProgress())
       }
     } else {
@@ -56,6 +56,14 @@
   let src = ''
   let paused = 'pause'
 
+  function moveTo(target) {
+    if (audioElement) {
+      console.log(audioElement.duration, audioElement.currentTime, target)
+      audioElement.currentTime = target
+      dispatch('progress', getProgress())
+    }
+  }
+
   $: {
     const { verb, detail } = $mediaAction$
     switch (verb) {
@@ -67,7 +75,7 @@
         audioElement.currentTime = 0
         break
       case 'scrub':
-        audioElement.currentTime = detail
+        moveTo(detail)
         break
       case '':
         break
@@ -88,6 +96,7 @@
     })
   }
   function handleEnded(event) {
+    // TODO add looping
     //    $mediaAction$ = 'paused'
   }
 </script>
