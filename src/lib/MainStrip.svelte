@@ -7,15 +7,14 @@
   export let id = 'main'
   export let canPlay = false
 
-  $: console.log(canPlay)
   const audioContext = getContext('audioContext')
   const mainBus = getContext('mainBus')
   const solo$ = getContext('solo$')
   const mute$ = getContext('mute$')
+  const glitch$ = getContext('glitch$')
 </script>
 
-<div
-  data-canplay={canPlay}>
+<div data-canplay={canPlay}>
   <Strip
     {id}
     {className}
@@ -23,6 +22,13 @@
     hasSolo={false}
     input={mainBus}
     output={audioContext.destination}>
+    <button
+      id="clear-glitch"
+      disabled={$glitch$ == 0}
+      on:click={() => {
+        $glitch$ = 0
+      }}>Clear glitch</button>
+
     <button
       disabled={$solo$ == 0}
       on:click={() => {
@@ -39,7 +45,7 @@
 
 <style>
   button {
-    font-size: x-small;
+    font-size: smaller;
   }
   :global(#main) {
     margin: 0px;
@@ -47,5 +53,10 @@
   }
   div[data-canplay='false'] {
     display: none;
+  }
+  #clear-glitch {
+    background-color: rgb(254 226 226 / 1);
+    font-weight: 500;
+    color: rgb(185 28 28 / 1);
   }
 </style>

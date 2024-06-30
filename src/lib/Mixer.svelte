@@ -20,8 +20,10 @@
   setContext('audioContext', audioContext) // share
   const solo$ = writable(0)
   const mute$ = writable(0)
+  const glitch$ = writable(0)
   setContext('solo$', solo$)
   setContext('mute$', mute$)
+  setContext('glitch$', glitch$)
   const mainBus = audioContext.createGain()
   mainBus.gain.value = 1.0
   setContext('mainBus', mainBus) // share
@@ -39,16 +41,26 @@
 </div>
 
 <style>
+  :global(body) {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
   :global(.component) {
     border: 2px solid gray;
-    padding: 3px;
-    border-radius: 4px;
+    padding: 0.5em;
+    border-radius: 0.4em;
   }
   :global(.fader) {
     padding: 2px;
   }
+  :global(.channel-strip) {
+    max-width: 6em;
+    min-width: 6em;
+    margin: 0.3em;
+  }
   :global(#main) {
-    padding-left: 1em;
+    max-width: 7.5em;
+    min-width: 7.5em;
   }
   :global(#media-selector) {
     margin-left: 5px;
@@ -60,11 +72,6 @@
     border: 0px;
     width: 90vw;
   }
-  #mixer {
-    display: flex;
-    width: 95vw;
-    padding: 0.5em;
-  }
   :global(.media-selector),
   :global(.main-strip),
   :global(.transport) {
@@ -75,5 +82,10 @@
   }
   :global(.channel-strip):nth-of-type(even) {
     background-color: silver;
+  }
+  #mixer {
+    display: flex;
+    width: 96vw;
+    padding: 0.5em;
   }
 </style>

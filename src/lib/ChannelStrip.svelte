@@ -49,6 +49,7 @@
 
   const audioContext = getContext('audioContext')
   const mainBus = getContext('mainBus')
+  const glitch$ = getContext('glitch$')
 
   let audioElement
   let audio
@@ -82,7 +83,7 @@
     audio = audioContext.createMediaElementSource(audioElement)
   })
 
-  function handleReady(event) {
+  function handleCanPlay(event) {
     dispatch('ready', {
       channel: thisChannelNo,
     })
@@ -90,14 +91,35 @@
   function handleEnded(event) {
     //    $mediaAction$ = 'paused'
   }
+
+  $: if (glitch > 0) {
+    glitch$.update((n) => n + 1)
+  }
+
+  let glitch = false
+  function glitchHandler(name) {
+    return (event) => {
+      glitch = true
+      console.info(`Glitch "${name}" in ${event.target.id}. ${$glitch$} total`)
+    }
+  }
+  const handleErrorGlitch = glitchHandler('error')
+  const handleStalledGlitch = glitchHandler('stalled')
+  const handleSuspendGlitch = glitchHandler('suspend')
+  const handleWaitingGlitch = glitchHandler('waiting')
 </script>
 
 <audio
+  id={`audio-${id}`}
   {src}
   bind:paused
   bind:this={audioElement}
   on:ended={handleEnded}
-  on:canplay={handleReady}></audio>
+  on:canplay={handleCanPlay}
+  on:error(handleErrorGlitch)
+  on:stalled(handleStalledGlitch)
+  on:suspend(handleSuspendGlitch)
+  on:waiting(handleWaitingGlitch)></audio>
 
 <Strip
   {id}
@@ -105,7 +127,29 @@
   {label}
   input={audio}
   output={mainBus}>
+  <div
+    id="glitch"
+    class:hidden={glitch == 0}>
+    glitch
+  </div>
 </Strip>
 
 <style>
+  #glitch {
+    margin-left: 0.375rem;
+    margin-right: 0.375rem;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 0.375rem;
+    background-color: rgb(254 226 226 / 1);
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
+    font-weight: 500;
+    color: rgb(185 28 28 / 1);
+  }
+  #glitch.hidden {
+    opacity: 0;
+  }
 </style>
