@@ -103,10 +103,6 @@
       console.info(`Glitch "${name}" in ${event.target.id}. ${$glitch$} total`)
     }
   }
-  const handleErrorGlitch = glitchHandler('error')
-  const handleStalledGlitch = glitchHandler('stalled')
-  const handleSuspendGlitch = glitchHandler('suspend')
-  const handleWaitingGlitch = glitchHandler('waiting')
 </script>
 
 <audio
@@ -117,9 +113,9 @@
   on:ended={handleEnded}
   on:canplay={handleCanPlay}
   on:error(handleErrorGlitch)
-  on:stalled(handleStalledGlitch)
-  on:suspend(handleSuspendGlitch)
-  on:waiting(handleWaitingGlitch)></audio>
+  on:error={glitchHandler('error')}
+  on:stalled={glitchHandler('stalled')}
+  on:waiting={glitchHandler('waiting')}></audio>
 
 <Strip
   {id}
