@@ -29,12 +29,6 @@
       current: elemReady ? audioElement.currentTime : 0,
     }
   }
-  export function moveTo({ detail: current }) {
-    if (audioElement) {
-      audioElement.currentTime = current
-      dispatch('progress', getProgress())
-    }
-  }
 
   $: {
     if (monitorProgress && audioElement) {
