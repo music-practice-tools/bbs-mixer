@@ -104,10 +104,8 @@
 <div
   class="component {className}"
   {id}>
-  <div class="slot">
-    <slot></slot>
-  </div>
   <div class="controls">
+    <slot></slot>
     {#if hasSolo}
       <label
         ><input
@@ -130,19 +128,12 @@
 </div>
 
 <style>
-  .strip {
-    max-width: 70px;
-    min-width: 70px;
-    margin: 5px;
-  }
   .strip :global(input[type='range']) {
     height: 20em;
   }
-  .slot {
-    padding-top: 0.5em;
-    padding-bottom: 0.5em;
-  }
   .controls {
+    display: flex;
+    flex-direction: column;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
   }

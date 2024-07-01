@@ -88,6 +88,7 @@
   button {
     margin: 4px;
     font-size: large;
+    font-family: serif; /* stops annoying blue background in unicode chars*/
   }
   .component {
     padding-left: 1em;

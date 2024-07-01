@@ -71,9 +71,13 @@
     vertical-align: top;
   }
   .label {
-    height: 2.4em;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.2rem;
+    height: 3.2em;
     overflow: hidden;
-    width: fit-content;
+    width: 100%;
     padding: 3px;
     border: solid black 1px;
     border-radius: 3px;

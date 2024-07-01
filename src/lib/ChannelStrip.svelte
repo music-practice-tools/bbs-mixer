@@ -82,13 +82,19 @@
     audio = audioContext.createMediaElementSource(audioElement)
   })
 
-  function handleReady(event) {
+  function handleCanPlay(event) {
     dispatch('ready', {
       channel: thisChannelNo,
     })
   }
   function handleEnded(event) {
     //    $mediaAction$ = 'paused'
+  }
+
+  function glitchHandler(name) {
+    return (event) => {
+      console.info(`Glitch "${name}" in ${event.target.id}`)
+    }
   }
 </script>
 
@@ -97,7 +103,10 @@
   bind:paused
   bind:this={audioElement}
   on:ended={handleEnded}
-  on:canplay={handleReady}></audio>
+  on:canplay={handleCanPlay}
+  on:error={glitchHandler('error')}
+  on:stalled={glitchHandler('stalled')}
+  on:waiting={glitchHandler('waiting')}></audio>
 
 <Strip
   {id}
