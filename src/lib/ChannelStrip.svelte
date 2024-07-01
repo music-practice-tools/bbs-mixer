@@ -95,6 +95,9 @@
   $: if (glitch > 0) {
     glitch$.update((n) => n + 1)
   }
+  $: if ($glitch$ == 0) {
+    glitch = 0
+  }
 
   let glitch = false
   function glitchHandler(name) {
