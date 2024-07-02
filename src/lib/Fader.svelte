@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte'
 
   export let className = 'fader'
-  export let id
+  export let id = '' // stops error o chrome but empty id in DOM
   export let label = ''
 
   const dispatch = createEventDispatcher()

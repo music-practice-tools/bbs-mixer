@@ -1,6 +1,5 @@
 <script>
-  import { onDestroy } from 'svelte'
-  import { getContext } from 'svelte'
+  import { onDestroy, getContext } from 'svelte'
 
   import Fader from '$lib/Fader.svelte'
 
@@ -24,6 +23,11 @@
 
   $: {
     if (input !== undefined && output !== undefined && gainNode === undefined) {
+      console.info(
+        id,
+        Object.getPrototypeOf(input).constructor.name,
+        Object.getPrototypeOf(output).constructor.name,
+      )
       gainNode = audioContext.createGain()
       muteNode = audioContext.createGain()
       input.connect(gainNode).connect(muteNode).connect(output)
@@ -33,8 +37,11 @@
   onDestroy(() => {
     // I doubt this is needed - assume nodes and source are GCd
     input.disconnect()
+    input = undefined
     gainNode.disconnect()
+    gainNode = undefined
     muteNode.disconnect()
+    muteNode = undefined
   })
 
   function handleFader(event) {

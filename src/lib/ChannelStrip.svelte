@@ -29,6 +29,7 @@
       current: elemReady ? audioElement.currentTime : 0,
     }
   }
+  export let mainBus
 
   $: {
     if (monitorProgress && audioElement) {
@@ -42,7 +43,6 @@
   }
 
   const audioContext = getContext('audioContext')
-  const mainBus = getContext('mainBus')
 
   let audioElement
   let audio
@@ -94,6 +94,7 @@
 
 <audio
   {src}
+  preload="auto"
   bind:paused
   bind:this={audioElement}
   on:ended={handleEnded}

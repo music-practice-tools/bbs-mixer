@@ -4,7 +4,6 @@
 
   import Channels from '$lib/Channels.svelte'
   import { mediaAction$ } from '$lib/ChannelStrip.svelte'
-  import MainStrip from '$lib/MainStrip.svelte'
 
   export let className = 'mixer'
   export let id = 'mixer'
@@ -22,20 +21,13 @@
   const mute$ = writable(0)
   setContext('solo$', solo$)
   setContext('mute$', mute$)
-  const mainBus = audioContext.createGain()
-  mainBus.gain.value = 1.0
-  setContext('mainBus', mainBus) // share
   setContext('mediaAction$', mediaAction$)
-
-  let canPlay = false
 </script>
 
 <div
   {id}
   class="component {className}">
-  <Channels bind:canPlay>
-    <MainStrip {canPlay}></MainStrip>
-  </Channels>
+  <Channels></Channels>
 </div>
 
 <style>

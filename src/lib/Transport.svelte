@@ -3,7 +3,6 @@
 
   export let className = 'transport'
   export let id = 'transport'
-  export let canPlay = false
   export let progress = { duration: 0, progress: 0 }
   let isPaused = true
 
@@ -47,21 +46,16 @@
   }
 
   const formatTime = (seconds) =>
-    new Date(seconds * 1000).toISOString().slice(11, 19)
+    new Date(seconds * 1000).toISOString().slice(14, 19)
 </script>
 
 <div
   {id}
-  class="component {className}"
-  data-canplay={canPlay}>
-  <button
-    on:click={handleSkipBack}
-    disabled={!canPlay}>
-    &#x23EE;</button>
+  class="component {className}">
+  <button on:click={handleSkipBack}>&#x23EE;</button>
   <button
     id="play"
     on:click={handlePlay}
-    disabled={!canPlay}
     aria-label={isPaused ? 'play' : 'pause'}>
     <span>{isPaused ? '\u{23F5}' : '\u{23F8}'}</span>
   </button>
@@ -69,7 +63,6 @@
   <input
     id="progress"
     type="range"
-    disabled={!canPlay}
     min="0"
     value={progress.progress}
     max={progress.duration}
@@ -82,9 +75,6 @@
 </div>
 
 <style>
-  div[data-canplay='false'] {
-    display: none;
-  }
   button {
     margin: 4px;
     font-size: large;

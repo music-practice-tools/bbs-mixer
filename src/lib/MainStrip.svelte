@@ -5,15 +5,13 @@
 
   export let className = 'strip main-strip'
   export let id = 'main'
-  export let canPlay = false
-
+  export let mainBus
   const audioContext = getContext('audioContext')
-  const mainBus = getContext('mainBus')
   const solo$ = getContext('solo$')
   const mute$ = getContext('mute$')
 </script>
 
-<div data-canplay={canPlay}>
+<div>
   <Strip
     {id}
     {className}
@@ -42,8 +40,5 @@
   :global(#main) {
     margin: 0px;
     margin-left: 5px;
-  }
-  div[data-canplay='false'] {
-    display: none;
   }
 </style>

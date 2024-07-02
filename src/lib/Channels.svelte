@@ -1,19 +1,23 @@
 <script>
-  import { createEventDispatcher } from 'svelte'
+  import { getContext } from 'svelte'
 
   import MediaSelector from '$lib/MediaSelector.svelte'
   import Transport from '$lib/Transport.svelte'
   import ChannelStrip from '$lib/ChannelStrip.svelte'
+  import MainStrip from '$lib/MainStrip.svelte'
 
   export let className = 'channels'
   export let id = 'channels'
-  export let canPlay = false
+
+  const audioContext = getContext('audioContext')
 
   let fileHandles = []
   let channelRefs = []
   let progress = { duration: 0, progress: 0 }
+  let canPlay = false
+  let mymix = false
 
-  function handleMediaSelected({ detail: { media } }) {
+  function handleMediaSelected({ detail: { media, inst } }) {
     if (media.length == 0) {
       fileHandles = []
       canPlay = false
@@ -21,8 +25,44 @@
     } else {
       fileHandles = media
       // canPlay will be set via handleReady
+      mymix = inst == 2
+      if (mymix) {
+        console.log('mm')
+        mainBusReady = createAudioProcessor(audioContext)
+        /*      mainBusReady.then((node) => {
+        console.log('z', node)
+        z = node
+        return node
+      })*/
+      } else {
+        console.log('nmm')
+        mainBusReady = new Promise((resolve) => {
+          const mainBus = audioContext.createGain()
+          mainBus.gain.value = 1.0
+          resolve(mainBus)
+        })
+      }
     }
   }
+
+  async function createAudioProcessor(audioContext) {
+    try {
+      //      await audioContext.resume() // ???
+      await audioContext.audioWorklet.addModule('/audioWorklet.js', {
+        credentials: 'omit',
+      })
+    } catch (e) {
+      throw e
+    }
+
+    const node = new AudioWorkletNode(audioContext, 'audio-processor')
+    node.onprocessorerror = (event) => {
+      console.error('Audio worklet node processing error!', event.message)
+    }
+    return node
+  }
+
+  let mainBusReady
 
   function handleReady(event) {
     const notReady = channelRefs.filter((ref) => {
@@ -49,26 +89,33 @@
   class="component {className}">
   <div id="controls">
     <MediaSelector on:mediaSelected={handleMediaSelected}></MediaSelector>
-    <Transport
-      {canPlay}
-      {progress}></Transport>
+    {#if canPlay}
+      <Transport {progress}></Transport>
+    {/if}
   </div>
 
-  <div id="strips">
-    <div id="channel-strips">
-      {#each fileHandles as fileHandle, i}
-        <ChannelStrip
-          bind:this={channelRefs[i]}
-          on:ready={handleReady}
-          on:progress={handleProgress}
-          {fileHandle} />
-      {:else}
-        <span id="no-strips"
-          >Mixer controls will appear once audio tracks are loaded.</span>
-      {/each}
+  {#await mainBusReady then node}
+    <div id="strips">
+      <div id="channel-strips">
+        {#each fileHandles as fileHandle, i}
+          <ChannelStrip
+            bind:this={channelRefs[i]}
+            on:ready={handleReady}
+            on:progress={handleProgress}
+            {fileHandle}
+            mainBus={node} />
+        {:else}
+          <span id="no-strips"
+            >Mixer controls will appear once audio tracks are loaded.</span>
+        {/each}
+      </div>
+      {#if canPlay}
+        <MainStrip mainBus={node}></MainStrip>
+      {/if}
     </div>
-    <slot></slot>
-  </div>
+  {:catch error}
+    Error! {error.message}
+  {/await}
 </div>
 
 <style>
