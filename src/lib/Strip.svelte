@@ -117,14 +117,14 @@
       <label
         ><input
           type="checkbox"
-          id="solo"
+          id={`solo-${id}`}
           bind:checked={solo} />
         Solo</label>
     {/if}
     <label
       ><input
         type="checkbox"
-        id="Mute"
+        id={`mute-${id}`}
         disabled={muteDisabled}
         bind:checked={mute} />
       Mute</label>
