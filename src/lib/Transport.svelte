@@ -72,6 +72,7 @@
     on:touchend={() => handleScrubSelect(true)}
     on:input={handleScrub} />
   <div id="duration">{formatTime(progress.duration)}</div>
+  <div id="rate">({`${audioContext.sampleRate / 1000} kHz)`}</div>
 </div>
 
 <style>
