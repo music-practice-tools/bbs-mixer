@@ -5,11 +5,9 @@
 </script>
 
 <script>
-  import { onMount, getContext, createEventDispatcher } from 'svelte'
+  import { onMount, onDestroy, getContext, createEventDispatcher } from 'svelte'
 
   import Strip from '$lib/Strip.svelte'
-
-  const dispatch = createEventDispatcher()
 
   export let channelNumber = 0
   export let className = 'strip channel-strip'
@@ -19,6 +17,7 @@
   export function getProgress() {
     const elemReady = audioElement && audioElement.readyState >= 3 // maybe 2 ?
     return {
+      playing,
       channel: channelNumber,
       ready: elemReady,
       duration: elemReady ? audioElement.duration : 0,
@@ -27,11 +26,18 @@
   }
   export let mainBus
 
+  const dispatch = createEventDispatcher()
+  function dispatchProgress() {
+    dispatch('progress', getProgress())
+  }
+
+  let playing = false
+
   $: {
     if (monitorProgress && audioElement) {
-      dispatch('progress', getProgress())
+      dispatchProgress()
       audioElement.ontimeupdate = () => {
-        dispatch('progress', getProgress())
+        dispatchProgress()
       }
     } else {
       //audioElement.ontimeupdate = undefined
@@ -44,14 +50,15 @@
   let audio
   let label = ''
   let src = ''
-  let paused = 'pause'
 
   $: {
     const { verb, detail } = $mediaAction$
     switch (verb) {
       case 'pause':
       case 'play':
-        paused = verb == 'pause'
+        if (audioElement) {
+          audioElement[verb == 'pause' ? 'pause' : 'play']()
+        }
         break
       case 'skipback':
         audioElement.currentTime = 0
@@ -77,9 +84,7 @@
       channel: channelNumber,
     })
   }
-  function handleEnded(event) {
-    //    $mediaAction$ = 'paused'
-  }
+  function handleEnded(event) {}
 
   function glitchHandler(name) {
     return (event) => {
@@ -91,7 +96,14 @@
 <audio
   {src}
   preload="auto"
-  bind:paused
+  on:playing={() => {
+    playing = true
+    dispatchProgress()
+  }}
+  on:pause={() => {
+    playing = false
+    dispatchProgress()
+  }}
   bind:this={audioElement}
   on:ended={handleEnded}
   on:canplay={handleCanPlay}

@@ -11,9 +11,11 @@
 
   const audioContext = getContext('audioContext')
 
+  const defaultProgress = { playing: false, duration: 0, current: 0 }
+
   let fileHandles = []
   let channelRefs = []
-  let progress = { duration: 0, progress: 0 }
+  let progress = { ...defaultProgress }
   let canPlay = false
   let mymix = false
 
@@ -21,9 +23,10 @@
     if (media.length == 0) {
       fileHandles = []
       canPlay = false
-      progress = { duration: 0, progress: 0 }
+      progress = { ...defaultProgress }
     } else {
       fileHandles = media
+      progress = { ...defaultProgress }
       // canPlay will be set via handleReady
       mymix = inst == 2
       if (mymix) {
@@ -79,8 +82,8 @@
   }
 
   function handleProgress({ detail }) {
-    const { duration, current } = detail
-    progress = { duration, progress: current }
+    const { playing, duration, current } = detail
+    progress = { playing, duration, current }
   }
 </script>
 

@@ -3,9 +3,8 @@
 
   export let className = 'transport'
   export let id = 'transport'
-  export let progress = { duration: 0, progress: 0 }
-  let isPaused = true
-
+  export let progress = { playing: false, duration: 0, current: 0 }
+  
   const audioContext = getContext('audioContext')
   const mediaAction$ = getContext('mediaAction$')
 
@@ -15,8 +14,7 @@
       audioContext.resume()
     }
 
-    isPaused = !isPaused
-    $mediaAction$ = { verb: isPaused ? 'pause' : 'play' }
+    $mediaAction$ = { verb: progress.playing ? 'pause' : 'play' }
   }
 
   function handleSkipBack(event) {
@@ -56,15 +54,15 @@
   <button
     id="play"
     on:click={handlePlay}
-    aria-label={isPaused ? 'play' : 'pause'}>
-    <span>{isPaused ? '\u{23F5}' : '\u{23F8}'}</span>
+    aria-label={progress.playing ? 'pause' : 'play'}>
+    <span>{progress.playing ? '\u{23F8}' : '\u{23F5}'}</span>
   </button>
-  <div id="current">{formatTime(progress.progress)}</div>
+  <div id="current">{formatTime(progress.current)}</div>
   <input
     id="progress"
     type="range"
     min="0"
-    value={progress.progress}
+    value={progress.current}
     max={progress.duration}
     on:mousedown={() => handleScrubSelect(false)}
     on:touchstart={() => handleScrubSelect(false)}
