@@ -2,8 +2,6 @@
   import { writable } from 'svelte/store'
 
   export const mediaAction$ = writable('')
-
-  let channelNo = 0
 </script>
 
 <script>
@@ -11,19 +9,17 @@
 
   import Strip from '$lib/Strip.svelte'
 
-  channelNo = channelNo + 1
-  const thisChannelNo = channelNo
-
   const dispatch = createEventDispatcher()
 
+  export let channelNumber = 0
   export let className = 'strip channel-strip'
-  export let id = 'channel-' + channelNo
+  export let id = 'channel-' + channelNumber
   export let fileHandle
   export let monitorProgress = false
   export function getProgress() {
     const elemReady = audioElement && audioElement.readyState >= 3 // maybe 2 ?
     return {
-      channel: thisChannelNo,
+      channel: channelNumber,
       ready: elemReady,
       duration: elemReady ? audioElement.duration : 0,
       current: elemReady ? audioElement.currentTime : 0,
@@ -78,7 +74,7 @@
 
   function handleCanPlay(event) {
     dispatch('ready', {
-      channel: thisChannelNo,
+      channel: channelNumber,
     })
   }
   function handleEnded(event) {

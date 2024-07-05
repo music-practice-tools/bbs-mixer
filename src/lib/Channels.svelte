@@ -28,12 +28,7 @@
       mymix = inst == 2
       if (mymix) {
         console.log('mm')
-        mainBusReady = createAudioProcessor(audioContext)
-        /*      mainBusReady.then((node) => {
-        console.log('z', node)
-        z = node
-        return node
-      })*/
+        mainBusReady = createAudioProcessor(audioContext, fileHandles.length)
       } else {
         console.log('nmm')
         mainBusReady = new Promise((resolve) => {
@@ -45,7 +40,7 @@
     }
   }
 
-  async function createAudioProcessor(audioContext) {
+  async function createAudioProcessor(audioContext, numberOfInputs) {
     try {
       //      await audioContext.resume() // ???
       await audioContext.audioWorklet.addModule('/audioWorklet.js', {
@@ -55,7 +50,13 @@
       throw e
     }
 
-    const node = new AudioWorkletNode(audioContext, 'audio-processor')
+    const node = new AudioWorkletNode(audioContext, 'audio-processor', {
+      numberOfInputs,
+      numberOfOutputs: 1,
+      outputChannelCount: [2],
+    })
+    node.channelCount = 2
+    node.channelCountMode = 'explicit'
     node.onprocessorerror = (event) => {
       console.error('Audio worklet node processing error!', event.message)
     }
@@ -103,6 +104,7 @@
             on:ready={handleReady}
             on:progress={handleProgress}
             {fileHandle}
+            channelNumber={i + 1}
             mainBus={node} />
         {:else}
           <span id="no-strips"
