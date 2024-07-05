@@ -27,10 +27,9 @@
       // canPlay will be set via handleReady
       mymix = inst == 2
       if (mymix) {
-        console.log('mm')
+        console.info('Using worklet to mix')
         mainBusReady = createAudioProcessor(audioContext, fileHandles.length)
       } else {
-        console.log('nmm')
         mainBusReady = new Promise((resolve) => {
           const mainBus = audioContext.createGain()
           mainBus.gain.value = 1.0
@@ -105,7 +104,7 @@
             on:progress={handleProgress}
             {fileHandle}
             channelNumber={i + 1}
-            mainBus={node} />
+            mainBus={{ node, index: mymix ? i : 0 }} />
         {:else}
           <span id="no-strips"
             >Mixer controls will appear once audio tracks are loaded.</span>

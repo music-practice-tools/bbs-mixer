@@ -23,14 +23,12 @@
 
   $: {
     if (input !== undefined && output !== undefined && gainNode === undefined) {
-      console.info(
-        id,
-        Object.getPrototypeOf(input).constructor.name,
-        Object.getPrototypeOf(output).constructor.name,
-      )
       gainNode = audioContext.createGain()
       muteNode = audioContext.createGain()
-      input.connect(gainNode).connect(muteNode).connect(output)
+      input
+        .connect(gainNode)
+        .connect(muteNode)
+        .connect(output.node, 0, output.index)
     }
   }
 

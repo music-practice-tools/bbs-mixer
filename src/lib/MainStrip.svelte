@@ -18,7 +18,7 @@
     label="Main"
     hasSolo={false}
     input={mainBus}
-    output={audioContext.destination}>
+    output={{ node: audioContext.destination, index: 0 }}>
     <button
       disabled={$solo$ == 0}
       on:click={() => {
