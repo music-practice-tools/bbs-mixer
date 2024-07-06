@@ -15,7 +15,7 @@
   export let fileHandle
   export let monitorProgress = false
   export function getProgress() {
-    const elemReady = audioElement && audioElement.readyState >= 3 // maybe 2 ?
+    const elemReady = audioElement && audioElement.readyState >= 2 // maybe 2 ?
     return {
       playing,
       channel: channelNumber,
@@ -95,7 +95,7 @@
 
 <audio
   {src}
-  preload="auto"
+  zzzpreload="auto"
   on:playing={() => {
     playing = true
     dispatchProgress()
