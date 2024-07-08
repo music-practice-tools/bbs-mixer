@@ -81,7 +81,7 @@
 
   function handleCanPlay(event) {
     dispatch('ready', {
-      channel: channelNumber,
+      channelNumber,
     })
   }
   function handleEnded(event) {}

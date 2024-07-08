@@ -66,12 +66,11 @@
   }
 
   let mainBusReady
+  let readyChannels = new Set()
 
-  function handleReady(event) {
-    const notReady = channelRefs.filter((ref) => {
-      return !ref.getProgress().ready
-    })
-    if (notReady.length == 0) {
+  function handleReady({ detail: { channelNumber } }) {
+    readyChannels.add(channelNumber)
+    if (readyChannels.size == fileHandles.length) {
       const longest = channelRefs.reduce((acc, cur, i, arr) => {
         const duration = cur.getProgress().duration
         return duration > acc.duration ? { ref: cur, duration } : acc
