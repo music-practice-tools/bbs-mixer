@@ -95,7 +95,6 @@
 
 <audio
   {src}
-  zzzpreload="auto"
   on:playing={() => {
     playing = true
     dispatchProgress()
