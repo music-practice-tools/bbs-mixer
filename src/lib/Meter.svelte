@@ -37,8 +37,12 @@
   }
 
   function getAverage(array) {
-    const sum = array.reduce((acc, val) => acc + val, 0)
+    const sum = array.reduce((acc, cur) => acc + cur, 0)
     return sum / array.length
+  }
+
+  function getPeak(array) {
+    return array.reduce((acc, cur) => (cur > acc ? cur : acc), 0)
   }
 
   let gradient
@@ -47,7 +51,7 @@
       const array = new Uint8Array(analyser.frequencyBinCount)
       return function fillMeter(ctx) {
         analyser.getByteFrequencyData(array)
-        const average = getAverage(array)
+        const measurement = getAverage(array)
 
         ctx.fillStyle = '#15181b'
         ctx.fillRect(offset, 0, meterWidth, meterHeight)
@@ -58,7 +62,7 @@
         ctx.fillStyle = gradient
         ctx.fillRect(
           offset,
-          meterHeight - average * (meterHeight / 100),
+          meterHeight - measurement * (meterHeight / 100),
           meterWidth,
           meterHeight + 200,
         )
@@ -102,7 +106,7 @@
   const audioContext = getContext('audioContext')
 
   let canvas
-  let leftBouncer = { average: 0, opacity: 1 }
+  let leftBouncer = { measurement: 0, opacity: 1 }
 
   let cleanOnDestroy
 
@@ -134,8 +138,8 @@
     afrId = requestAnimationFrame(draw)
 
     // bouncers left
-    /*    if (average > leftBouncer.average) {
-      leftBouncer.average = average
+    /*    if (measurement > leftBouncer.measurement) {
+      leftBouncer.measurement = measurement
       leftBouncer.opacity = 1
     } else {
       if (leftBouncer.opacity > 0.1) {
@@ -144,19 +148,19 @@
       } else {
         leftBouncer.opacity = 0
       }
-      leftBouncer.average-- // make it fall
+      leftBouncer.measurement-- // make it fall
     }
 */
     // bouncers right
-    /*  if (average2 > this.rightBouncer.average) {
+    /*  if (measurement2 > this.rightBouncer.measurement) {
           this.rightBouncer.opacity = 1
-          this.rightBouncer.average = average2
+          this.rightBouncer.measurement = measurement2
         } else {
           if (this.rightBouncer.opacity > 0.1)
             // fade out
             this.rightBouncer.opacity = this.rightBouncer.opacity - 0.1
           else this.rightBouncer.opacity = 0
-          this.rightBouncer.average-- // make it fall
+          this.rightBouncer.measurement-- // make it fall
         }
     */
 
@@ -164,19 +168,19 @@
 
     // create the bouncers
 
-    /*    if (average > 0)
+    /*    if (measurement > 0)
       ctx.fillRect(
         0,
-        meterHeight - leftBouncer.average * (meterHeight / 100) - 2,
+        meterHeight - leftBouncer.measurement * (meterHeight / 100) - 2,
         meterWidth,
         leftBouncer.opacity,
       )
 */
-    /*      if (average2 > 0)
+    /*      if (measurement2 > 0)
           ctx.fillRect(
             this.meterWidth + this.meterGap,
             this.meterHeight -
-              this.rightBouncer.average * (this.meterHeight / 100) -
+              this.rightBouncer.measurement * (this.meterHeight / 100) -
               2,
             this.meterWidth,
             this.rightBouncer.opacity,

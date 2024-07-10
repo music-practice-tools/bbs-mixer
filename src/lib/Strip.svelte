@@ -19,32 +19,32 @@
   let muteDisabled = false
   let solo = undefined
 
-  let gainNode
+  let fadeNode
   let muteNode
   let meteredNode
 
   $: {
-    if (input !== undefined && output !== undefined && gainNode === undefined) {
-      gainNode = audioContext.createGain()
+    if (input !== undefined && output !== undefined && fadeNode === undefined) {
+      fadeNode = audioContext.createGain()
       muteNode = audioContext.createGain()
 
       input
-        .connect(gainNode)
         .connect(muteNode)
+        .connect(fadeNode)
         .connect(output.node, 0, output.index)
-      meteredNode = input // pfl
+      meteredNode = fadeNode // post fade / mute
     }
   }
 
   onDestroy(() => {
     // I doubt this is needed - assume nodes and source are GCd
     input.disconnect()
-    gainNode.disconnect()
+    fadeNode.disconnect()
     muteNode.disconnect()
   })
 
   function handleFader(event) {
-    gainNode.gain.value = event.detail
+    fadeNode.gain.value = event.detail
   }
 
   $: hasSolo && doSolo(solo)
