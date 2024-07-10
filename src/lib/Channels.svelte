@@ -45,14 +45,14 @@
   async function createAudioProcessor(audioContext, numberOfInputs) {
     try {
       //      await audioContext.resume() // ???
-      await audioContext.audioWorklet.addModule('/audioWorklet.js', {
+      await audioContext.audioWorklet.addModule('/mixWorklet.js', {
         credentials: 'omit',
       })
     } catch (e) {
       throw e
     }
 
-    const node = new AudioWorkletNode(audioContext, 'audio-processor', {
+    const node = new AudioWorkletNode(audioContext, 'mix-processor', {
       numberOfInputs,
       numberOfOutputs: 1,
       outputChannelCount: [2],

@@ -27,4 +27,4 @@ class audioProcessor extends AudioWorkletProcessor {
         return true;  // false stops processing when makes sense but chrome bug https://issues.chromium.org/issues/41435286 
     }
 }
-registerProcessor("audio-processor", audioProcessor);
+registerProcessor("mix-processor", audioProcessor);

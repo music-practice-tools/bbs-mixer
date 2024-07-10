@@ -2,6 +2,7 @@
   import { onDestroy, getContext } from 'svelte'
 
   import Fader from '$lib/Fader.svelte'
+  import Meter from '$lib/Meter.svelte'
 
   const audioContext = getContext('audioContext')
   const solo$ = getContext('solo$')
@@ -20,26 +21,26 @@
 
   let gainNode
   let muteNode
+  let meteredNode
 
   $: {
     if (input !== undefined && output !== undefined && gainNode === undefined) {
       gainNode = audioContext.createGain()
       muteNode = audioContext.createGain()
+
       input
         .connect(gainNode)
         .connect(muteNode)
         .connect(output.node, 0, output.index)
+      meteredNode = input // pfl
     }
   }
 
   onDestroy(() => {
     // I doubt this is needed - assume nodes and source are GCd
     input.disconnect()
-    input = undefined
     gainNode.disconnect()
-    gainNode = undefined
     muteNode.disconnect()
-    muteNode = undefined
   })
 
   function handleFader(event) {
@@ -127,19 +128,43 @@
         bind:checked={mute} />
       Mute</label>
   </div>
-  <Fader
-    {label}
-    on:fader={handleFader}></Fader>
+  <div class="strip-wrapper">
+    <Fader
+      id={`fader-${id}`}
+      on:fader={handleFader}></Fader>
+    <Meter
+      id={`meter-${id}`}
+      {meteredNode}></Meter>
+  </div>
+  <div class="label">{label}</div>
 </div>
 
 <style>
-  .strip :global(input[type='range']) {
-    height: 20em;
+  .strip-wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    margin-bottom: 5px;
+    height: 300px;
   }
   .controls {
     display: flex;
     flex-direction: column;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
+  }
+  .label {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.2rem;
+    height: 3.2em;
+    overflow: hidden;
+    width: 100%;
+    padding: 3px;
+    border: solid black 1px;
+    border-radius: 3px;
+    margin-top: 5px;
+    background-color: lightgoldenrodyellow;
   }
 </style>
