@@ -1,24 +1,27 @@
 <script context="module">
-  const meterWidth = 10
-  const meterGap = 4
-  const meterHeight = 300
-  const canvasWidth = meterWidth * 2 + meterGap
-  const canvasHeight = meterHeight
+  const METERWIDTH = 10
+  const METERGAP = 4
+  const METERHEIGHT = 300
+  const CANVASWIDTH = METERWIDTH * 2 + METERGAP
+  const CANVASHEIGHT = METERHEIGHT
+
+  const FFTSIZE = 2048
+  const DBRANGEMAX = 0
+  const DBRANGEMIN = -48
 
   function createMeteredNode(audioContext) {
     return new AnalyserNode(audioContext, {
-      fftSize: 1024,
-      smoothingTimeConstant: 0.6,
-      maxDecibels: 0,
+      fftSize: FFTSIZE,
     })
   }
 
   function createGradient(ctx) {
-    const gradient = ctx.createLinearGradient(0, 0, 0, meterHeight + 200)
-    gradient.addColorStop(1, '#5bfd3a')
-    gradient.addColorStop(0.75, '#3afd5b')
-    gradient.addColorStop(0.25, '#3afd5b')
-    gradient.addColorStop(0, '#5bfd3a')
+    const gradient = ctx.createLinearGradient(0, 0, 0, METERHEIGHT)
+    ;['red 1%', '#ff0 16%', 'lime 45%', '#0b0 100%'].forEach((val) => {
+      const [colour, pospc] = val.split(' ')
+      const pos = pospc.slice(0, -1) / 100
+      gradient.addColorStop(pos, colour)
+    })
     return gradient
   }
 
@@ -36,43 +39,57 @@
     return { leftAnalyser, rightAnalyser, cleanupNodes }
   }
 
-  function getAverage(array) {
-    const sum = array.reduce((acc, cur) => acc + cur, 0)
-    return sum / array.length
+  function getPeak(array) {
+    return array.reduce((acc, cur) => {
+      const sabs = Math.abs(cur)
+      return sabs > acc ? sabs : acc
+    }, 0.0)
   }
 
-  function getPeak(array) {
-    return array.reduce((acc, cur) => (cur > acc ? cur : acc), 0)
+  function getBaseLog(x, y) {
+    return Math.log(y) / Math.log(x)
+  }
+
+  function dbFromFloat(floatVal) {
+    return getBaseLog(10, floatVal) * 20
+  }
+
+  function peakPercent(db, dbRangeMin = DBRANGEMIN, dBRangeMax = DBRANGEMAX) {
+    let percent = Math.floor(
+      ((dBRangeMax - db) * 100) / (dBRangeMax - dbRangeMin),
+    )
+    if (percent > 100) {
+      percent = 100
+    }
+    if (percent < 0) {
+      percent = 0
+    }
+    return percent
   }
 
   let gradient
+  const array = new Float32Array(FFTSIZE)
   function createDrawMeter(offset) {
     return function (analyser) {
-      const array = new Uint8Array(analyser.frequencyBinCount)
       return function fillMeter(ctx) {
-        analyser.getByteFrequencyData(array)
-        const measurement = getAverage(array)
+        analyser.getFloatTimeDomainData(array)
+        const pc = peakPercent(dbFromFloat(getPeak(array)))
 
         ctx.fillStyle = '#15181b'
-        ctx.fillRect(offset, 0, meterWidth, meterHeight)
+        ctx.fillRect(offset, 0, METERWIDTH, METERHEIGHT * (pc / 100) - 1)
 
         if (!gradient) {
           gradient = createGradient(ctx)
         }
         ctx.fillStyle = gradient
-        ctx.fillRect(
-          offset,
-          meterHeight - measurement * (meterHeight / 100),
-          meterWidth,
-          meterHeight + 200,
-        )
+        ctx.fillRect(offset, METERHEIGHT * (pc / 100), METERWIDTH, METERHEIGHT)
       }
     }
   }
 
   function createMeterDrawer({ leftAnalyser, rightAnalyser }) {
     const drawLeftMeter = createDrawMeter(0)(leftAnalyser)
-    const drawRightMeter = createDrawMeter(meterWidth + meterGap)(rightAnalyser)
+    const drawRightMeter = createDrawMeter(METERWIDTH + METERGAP)(rightAnalyser)
     return function (ctx) {
       drawLeftMeter(ctx)
       drawRightMeter(ctx)
@@ -106,8 +123,6 @@
   const audioContext = getContext('audioContext')
 
   let canvas
-  let leftBouncer = { measurement: 0, opacity: 1 }
-
   let cleanOnDestroy
 
   $: if (meteredNode && canvas) {
@@ -130,15 +145,12 @@
       afrId = undefined
     }
     if (cleanOnDestroy) {
-      //cleanOnDestroy()
+      cleanOnDestroy()
     }
   })
 
-  function draw() {
-    afrId = requestAnimationFrame(draw)
-
-    // bouncers left
-    /*    if (measurement > leftBouncer.measurement) {
+  // bouncers left
+  /*    if (measurement > leftBouncer.measurement) {
       leftBouncer.measurement = measurement
       leftBouncer.opacity = 1
     } else {
@@ -151,48 +163,20 @@
       leftBouncer.measurement-- // make it fall
     }
 */
-    // bouncers right
-    /*  if (measurement2 > this.rightBouncer.measurement) {
-          this.rightBouncer.opacity = 1
-          this.rightBouncer.measurement = measurement2
-        } else {
-          if (this.rightBouncer.opacity > 0.1)
-            // fade out
-            this.rightBouncer.opacity = this.rightBouncer.opacity - 0.1
-          else this.rightBouncer.opacity = 0
-          this.rightBouncer.measurement-- // make it fall
-        }
-    */
-
-    drawMeters(ctx)
-
-    // create the bouncers
-
-    /*    if (measurement > 0)
+  /*    if (measurement > 0)
       ctx.fillRect(
         0,
-        meterHeight - leftBouncer.measurement * (meterHeight / 100) - 2,
-        meterWidth,
+        METERHEIGHT - leftBouncer.measurement * (METERHEIGHT / 100) - 2,
+        METERWIDTH,
         leftBouncer.opacity,
       )
-*/
-    /*      if (measurement2 > 0)
-          ctx.fillRect(
-            this.meterWidth + this.meterGap,
-            this.meterHeight -
-              this.rightBouncer.measurement * (this.meterHeight / 100) -
-              2,
-            this.meterWidth,
-            this.rightBouncer.opacity,
-          )
       */
-  }
 </script>
 
 <canvas
   bind:this={canvas}
-  width={canvasWidth}
-  height={canvasHeight}
+  width={CANVASWIDTH}
+  height={CANVASHEIGHT}
   style="display: block;"
   class="meter-canvas"></canvas>
 
