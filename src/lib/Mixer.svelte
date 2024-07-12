@@ -31,10 +31,6 @@
 </div>
 
 <style>
-  :global(body) {
-    padding-left: 1em;
-    padding-right: 1em;
-  }
   :global(.component) {
     border: 2px solid gray;
     padding: 0.5em;
