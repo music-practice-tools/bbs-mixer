@@ -42,7 +42,6 @@
   :global(.channel-strip) {
     max-width: 6.5em;
     min-width: 6.5em;
-    margin: 0.3em;
   }
   :global(#main) {
     max-width: 8em;
@@ -68,6 +67,9 @@
   }
   :global(.channel-strip):nth-of-type(even) {
     background-color: silver;
+  }
+  :global(.channel-strip):nth-of-type(1) {
+    margin-left: 0.3em;
   }
   #mixer {
     display: flex;

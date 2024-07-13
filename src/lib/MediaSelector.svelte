@@ -39,9 +39,9 @@
     <FilePicker
       buttonText="Directory"
       on:filesSelected={handleFiles} />
-    <FilePicker
+    <!--    <FilePicker
       buttonText="Directory 2"
-      on:filesSelected={handleFiles2} />
+      on:filesSelected={handleFiles2} />-->
     <button on:click={handleClear}>Clear</button>
   </fieldset>
 </div>
