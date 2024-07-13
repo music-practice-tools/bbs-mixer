@@ -1,21 +1,5 @@
 <script>
-  import logo from '$lib/assets/logo-512x512.png'
-  document.title = 'BBS Mixer FAQ'
 </script>
-
-<header>
-  <img
-    src={logo}
-    title="BBS Mixer"
-    class="logo"
-    alt="logo" />
-  <h1>{document.title}</h1>
-  <nav>
-    <a
-      href="/"
-      data-sveltekit-reload>Back to App</a>
-  </nav>
-</header>
 
 <p>
   <strong>BBS Mixer</strong> is a web app for playing musical compositions purchased
@@ -34,6 +18,11 @@
   <li>Play, rewind and scrub to a specific position in the track.</li>
   <li>Adjust part levels, mute them or solo one or more.</li>
 </ul>
+
+<p>
+  Note, selecting directories is inconsistently supported across web browsers
+  and you may need to accept access to the files.
+</p>
 
 <style>
 </style>

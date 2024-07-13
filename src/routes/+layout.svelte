@@ -1,8 +1,28 @@
 <script>
-  console.log('z', document.title)
+  import logo from '$lib/assets/logo-512x512.png'
+  import { page } from '$app/stores'
 </script>
 
-<slot />
+<svelte:head>
+  <title>{$page.data.title}</title>
+  <html lang="en" />
+</svelte:head>
+
+<header>
+  <img
+    src={logo}
+    title="BBS Mixer"
+    class="logo"
+    alt="logo" />
+  <h1>{$page.data.title}</h1>
+  <nav>
+    <a
+      href={$page.data.nav.href}
+      data-sveltekit-reload>{$page.data.nav.label}</a>
+  </nav>
+</header>
+
+<slot></slot>
 
 <style>
   :global(body) {
@@ -33,12 +53,12 @@
     padding-left: 40px;
   }
 
-  :global(.logo) {
+  .logo {
     height: 4em;
     will-change: filter;
   }
 
-  :global(header) {
+  header {
     margin-bottom: 0.5rem;
     display: flex;
     justify-content: space-between;
