@@ -140,6 +140,9 @@
 </div>
 
 <style>
+  .component {
+    height: 500px;
+  }
   .strip-wrapper {
     display: flex;
     justify-content: space-around;

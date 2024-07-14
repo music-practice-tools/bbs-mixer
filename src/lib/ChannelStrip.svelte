@@ -12,7 +12,8 @@
   export let channelNumber = 0
   export let className = 'strip channel-strip'
   export let id = 'channel-' + channelNumber
-  export let fileHandle
+  export let label = ''
+  export let url = ''
   export let monitorProgress = false
   export function getProgress() {
     const elemReady = audioElement && audioElement.readyState >= 2 // maybe 2 ?
@@ -48,8 +49,6 @@
 
   let audioElement
   let audio
-  let label = ''
-  let src = ''
 
   $: {
     const { verb, detail } = $mediaAction$
@@ -71,10 +70,6 @@
     }
   }
 
-  const filename = fileHandle.name
-  label = filename.substring(0, filename.lastIndexOf('.')) || filename
-  src = URL.createObjectURL(fileHandle) // TODO see if need to free on delete
-
   onMount(() => {
     audio = audioContext.createMediaElementSource(audioElement)
   })
@@ -94,7 +89,8 @@
 </script>
 
 <audio
-  {src}
+  src={url}
+  id={`audio-${id}`}
   on:playing={() => {
     playing = true
     dispatchProgress()
