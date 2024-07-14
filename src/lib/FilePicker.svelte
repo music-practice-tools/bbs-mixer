@@ -17,6 +17,8 @@
     if (window.showDirectoryPicker) {
       const directoryHandle = await window.showDirectoryPicker({
         mode: 'read',
+        id: 'bbsmixer',
+        startIn: 'music',
       })
       let fileHandles = []
       for await (const fileHandle of getDirectoryFiles(directoryHandle)) {
