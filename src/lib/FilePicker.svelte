@@ -57,7 +57,7 @@
   }
 
   function handleChange() {
-    dispatch('filesSelected', files)
+    dispatch('filesSelected', [...files]) // convert to an array
   }
 </script>
 

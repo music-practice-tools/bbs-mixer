@@ -50,14 +50,19 @@
       canPlay = false
       progress = { ...defaultProgress }
     } else {
+      console.log(media)
       const audio = new Audio()
       fileInfos = media
-        .map((handle) => ({
-          handle,
-          label: /^\d*\s?\W*([\w\s]*)\.?[^.]*$/g.exec(handle.name)[1],
-          type: handle.type,
-          url: URL.createObjectURL(handle), // TODO see if need to free on delete
-        }))
+        .map((handle) => {
+          const label =
+            /^\d*\s?\W*([\w\s-_]*)\.?[^.]*$/g.exec(handle.name) ?? handle.name
+          return {
+            handle,
+            label: label,
+            type: handle.type,
+            url: URL.createObjectURL(handle), // TODO see if need to free on delete
+          }
+        })
         .filter(({ type }) => audio.canPlayType(type))
       progress = { ...defaultProgress }
       // canPlay will be set via handleReady
