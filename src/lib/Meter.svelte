@@ -1,28 +1,12 @@
 <script context="module">
-  const METERWIDTH = 10
-  const METERGAP = 4
-  const METERHEIGHT = 300
-  const CANVASWIDTH = METERWIDTH * 2 + METERGAP
-  const CANVASHEIGHT = METERHEIGHT
-
-  const FFTSIZE = 2048
-  const DBRANGEMAX = 0
-  const DBRANGEMIN = -48
+  const FFT_SIZE = 2048
+  const DB_RANGE_MAX = 0
+  const DB_RANGE_MIN = -48
 
   function createMeteredNode(audioContext) {
     return new AnalyserNode(audioContext, {
-      fftSize: FFTSIZE,
+      FFT_SIZE: FFT_SIZE,
     })
-  }
-
-  function createGradient(ctx) {
-    const gradient = ctx.createLinearGradient(0, 0, 0, METERHEIGHT)
-    ;['red 1%', '#ff0 16%', 'lime 45%', '#0b0 100%'].forEach((val) => {
-      const [colour, pospc] = val.split(' ')
-      const pos = pospc.slice(0, -1) / 100
-      gradient.addColorStop(pos, colour)
-    })
-    return gradient
   }
 
   function setupAudioNodes(audioContext, meteredNode) {
@@ -54,7 +38,11 @@
     return getBaseLog(10, floatVal) * 20
   }
 
-  function peakPercent(db, dbRangeMin = DBRANGEMIN, dBRangeMax = DBRANGEMAX) {
+  function peakPercent(
+    db,
+    dbRangeMin = DB_RANGE_MIN,
+    dBRangeMax = DB_RANGE_MAX,
+  ) {
     let percent = Math.floor(
       ((dBRangeMax - db) * 100) / (dBRangeMax - dbRangeMin),
     )
@@ -67,32 +55,21 @@
     return percent
   }
 
-  let gradient
-  const array = new Float32Array(FFTSIZE)
-  function createDrawMeter(offset) {
-    return function (analyser) {
-      return function fillMeter(ctx) {
-        analyser.getFloatTimeDomainData(array)
-        const pc = peakPercent(dbFromFloat(getPeak(array)))
-
-        ctx.fillStyle = '#15181b'
-        ctx.fillRect(offset, 0, METERWIDTH, METERHEIGHT * (pc / 100) - 1)
-
-        if (!gradient) {
-          gradient = createGradient(ctx)
-        }
-        ctx.fillStyle = gradient
-        ctx.fillRect(offset, METERHEIGHT * (pc / 100), METERWIDTH, METERHEIGHT)
-      }
+  const array = new Float32Array(FFT_SIZE) // one array per meter
+  function createDrawMeter(analyser) {
+    return function fillMeter(div) {
+      analyser.getFloatTimeDomainData(array)
+      const clipPercent = peakPercent(dbFromFloat(getPeak(array)))
+      div.style.clipPath = `inset(${clipPercent}% 0 0)`
     }
   }
 
   function createMeterDrawer({ leftAnalyser, rightAnalyser }) {
-    const drawLeftMeter = createDrawMeter(0)(leftAnalyser)
-    const drawRightMeter = createDrawMeter(METERWIDTH + METERGAP)(rightAnalyser)
-    return function (ctx) {
-      drawLeftMeter(ctx)
-      drawRightMeter(ctx)
+    const drawleftBar = createDrawMeter(leftAnalyser)
+    const drawrightBar = createDrawMeter(rightAnalyser)
+    return function ({ leftBar, rightBar }) {
+      drawleftBar(leftBar)
+      drawrightBar(rightBar)
     }
   }
 
@@ -123,21 +100,17 @@
 
   const audioContext = getContext('audioContext')
 
-  let canvas
+  let leftBar, rightBar
   let cleanOnDestroy
 
-  $: if (meteredNode && canvas) {
-    const ctx = canvas.getContext('2d')
-
-    if (meteredNode) {
-      const { leftAnalyser, rightAnalyser, cleanupNodes } = setupAudioNodes(
-        audioContext,
-        meteredNode,
-      )
-      cleanOnDestroy = cleanupNodes
-      const drawMeters = createMeterDrawer({ leftAnalyser, rightAnalyser })
-      registerDrawMeter(id, () => drawMeters(ctx))
-    }
+  $: if (meteredNode && leftBar && rightBar) {
+    const { leftAnalyser, rightAnalyser, cleanupNodes } = setupAudioNodes(
+      audioContext,
+      meteredNode,
+    )
+    cleanOnDestroy = cleanupNodes
+    const drawMeters = createMeterDrawer({ leftAnalyser, rightAnalyser })
+    registerDrawMeter(id, () => drawMeters({ leftBar, rightBar }))
   }
 
   onDestroy(() => {
@@ -149,37 +122,37 @@
       cleanOnDestroy()
     }
   })
-
-  // bouncers left
-  /*    if (measurement > leftBouncer.measurement) {
-      leftBouncer.measurement = measurement
-      leftBouncer.opacity = 1
-    } else {
-      if (leftBouncer.opacity > 0.1) {
-        // fade out
-        leftBouncer.opacity = leftBouncer.opacity - 0.1
-      } else {
-        leftBouncer.opacity = 0
-      }
-      leftBouncer.measurement-- // make it fall
-    }
-*/
-  /*    if (measurement > 0)
-      ctx.fillRect(
-        0,
-        METERHEIGHT - leftBouncer.measurement * (METERHEIGHT / 100) - 2,
-        METERWIDTH,
-        leftBouncer.opacity,
-      )
-      */
 </script>
 
-<canvas
-  bind:this={canvas}
-  width={CANVASWIDTH}
-  height={CANVASHEIGHT}
-  style="display: block;"
-  class="meter-canvas"></canvas>
+<div id="meter">
+  <div
+    id="leftbar"
+    bind:this={leftBar}>
+  </div>
+  <div
+    id="rightbar"
+    bind:this={rightBar}>
+  </div>
+</div>
 
 <style>
+  #meter {
+    display: flex;
+    gap: 2px;
+    height: 300px;
+    background: darkslategrey;
+    border-radius: 3px;
+  }
+  #leftbar,
+  #rightbar {
+    width: 10px;
+    background-image: linear-gradient(
+      to bottom,
+      red 1%,
+      #ff0 16%,
+      lime 45%,
+      #0a0 100%
+    );
+    transition: clip-path 0.1s;
+  }
 </style>
