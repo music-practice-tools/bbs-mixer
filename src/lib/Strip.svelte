@@ -178,10 +178,10 @@
 
   input[type='checkbox'] {
     box-sizing: border-box;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     margin: 2px;
-    border-width: 3px;
+    border-width: 4px;
     border-radius: 4px;
     appearance: none;
     border-style: outset;
@@ -199,22 +199,22 @@
   .solobtn {
     background: rgb(238, 235, 189);
     border-color: rgb(238, 235, 189);
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><text x="6" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 151, 1)">S</text></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 32 32" xml:space="preserve"><text x="3" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 151, 1)">S</text></svg>');
   }
   .solobtn:checked {
     background: yellow;
     border-color: yellow;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><text x="6" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 151, 1)">S</text></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 32 32" xml:space="preserve"><text x="5" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 151, 1)">S</text></svg>');
   }
   .mutebtn {
     background: lightcoral;
     border-color: lightcoral;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><text x="4" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 1, 1)">M</text></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 32 32" xml:space="preserve"><text x="3" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 1, 1)">M</text></svg>');
   }
   .mutebtn:checked {
     background: red;
     border-color: red;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><text x="4" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 1, 1)">M</text></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 32 32" xml:space="preserve"><text x="5" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 1, 1)">M</text></svg>');
   }
 
   /*
