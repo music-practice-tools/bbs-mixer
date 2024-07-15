@@ -197,8 +197,8 @@
     filter: grayscale(25%);
   }
   .solobtn {
-    background: rgb(238, 235, 189);
-    border-color: rgb(238, 235, 189);
+    background: rgb(240, 238, 216);
+    border-color: rgb(240, 238, 216);
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 32 32" xml:space="preserve"><text x="3" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 151, 1)">S</text></svg>');
   }
   .solobtn:checked {
@@ -207,8 +207,8 @@
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 32 32" xml:space="preserve"><text x="5" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 151, 1)">S</text></svg>');
   }
   .mutebtn {
-    background: lightcoral;
-    border-color: lightcoral;
+    background: rgb(244, 199, 199);
+    border-color: rgb(244, 199, 199);
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 32 32" xml:space="preserve"><text x="3" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 1, 1)">M</text></svg>');
   }
   .mutebtn:checked {
