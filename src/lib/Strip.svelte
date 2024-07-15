@@ -117,13 +117,15 @@
         <input
           type="checkbox"
           id={`solo-${id}`}
-          class="solobtn"
+          class="solobtn stripbutton"
+          aria-label="solo"
           bind:checked={solo} />
       {/if}
       <input
         type="checkbox"
         id={`mute-${id}`}
-        class="mutebtn"
+        class="mutebtn stripbutton"
+        aria-label="mute"
         disabled={muteDisabled}
         bind:checked={mute} />
     </div>
@@ -176,45 +178,43 @@
     background-color: lightgoldenrodyellow;
   }
 
-  input[type='checkbox'] {
+  :global(.stripbutton) {
     box-sizing: border-box;
+    margin: 2px;
+    border-width: 2px;
+    border-radius: 4px;
+    border-style: solid;
+  }
+  :global(input[type='checkbox'].stripbutton) {
     width: 30px;
     height: 30px;
-    margin: 2px;
-    border-width: 4px;
-    border-radius: 4px;
     appearance: none;
-    border-style: outset;
-    content: 'x';
   }
-  input[type='checkbox']:checked {
-    border-style: inset;
+  :global(.stripbutton:disabled) {
+    opacity: 0.25;
+    filter: grayscale(80%);
   }
-  input[type='checkbox']:disabled {
-    filter: grayscale(50%);
+  :global(.solobtn) {
+    border-color: rgb(122, 112, 0);
+    color: rgb(122, 112, 0);
   }
-  input[type='checkbox']:checked:disabled {
-    filter: grayscale(25%);
+  :global(input[type='checkbox'].solobtn) {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 30 30" xml:space="preserve"><text x="6" y="20" style="font: lighter 20px sans-serif; fill: rgb(122, 112, 0);">S</text></svg>');
   }
-  .solobtn {
-    background: rgb(240, 238, 216);
-    border-color: rgb(240, 238, 216);
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 32 32" xml:space="preserve"><text x="3" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 151, 1)">S</text></svg>');
+  :global(input[type='checkbox'].solobtn:checked) {
+    background-color: yellow;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 30 30" xml:space="preserve"><text x="6" y="20" style="font: bolder 20px sans-serif; fill: rgb(122, 112, 0);">S</text></svg>');
   }
-  .solobtn:checked {
-    background: yellow;
-    border-color: yellow;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 32 32" xml:space="preserve"><text x="5" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 151, 1)">S</text></svg>');
+  :global(.mutebtn) {
+    color: rgb(121, 0, 0);
+    border-color: rgb(121, 0, 0);
   }
-  .mutebtn {
-    background: rgb(244, 199, 199);
-    border-color: rgb(244, 199, 199);
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 32 32" xml:space="preserve"><text x="3" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 1, 1)">M</text></svg>');
+  :global(input[type='checkbox'].mutebtn) {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 30 30" xml:space="preserve"><text x="5" y="20" style="font: lighter 20px sans-serif; fill: rgb(121, 0, 0)">M</text></svg>');
   }
-  .mutebtn:checked {
-    background: red;
-    border-color: red;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 32 32" xml:space="preserve"><text x="5" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 1, 1)">M</text></svg>');
+  :global(input[type='checkbox'].mutebtn:checked) {
+    background-color: red;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30" height="30" viewBox="0 0 30 30" xml:space="preserve"><text x="5" y="20" style="font: bolder 20px sans-serif; fill: rgb(121, 0, 0)">M</text></svg>');
   }
 
   /*
