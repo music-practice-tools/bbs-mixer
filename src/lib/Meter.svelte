@@ -102,14 +102,15 @@
     drawers.push(drawer)
 
     const drawAll = () => {
-      afrId = requestAnimationFrame(drawAll)
+      const afrId = requestAnimationFrame(drawAll)
       drawers.forEach((drawer) => {
         drawer()
       })
+      return afrId
     }
 
     if (!afrId) {
-      drawAll()
+      afrId = drawAll()
     }
   }
 </script>
