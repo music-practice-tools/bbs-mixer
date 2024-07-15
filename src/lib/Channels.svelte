@@ -50,15 +50,15 @@
       canPlay = false
       progress = { ...defaultProgress }
     } else {
-      console.log(media)
       const audio = new Audio()
       fileInfos = media
         .map((handle) => {
-          const label =
-            /^\d*\s?\W*([\w\s-_]*)\.?[^.]*$/g.exec(handle.name) ?? handle.name
+          const result =
+            /^\d*\s*(.*?)(?:\.[^.]*)?$/g.exec(handle.name) ?? handle.name
+          const label = result !== null ? result[1] : handle.name
           return {
             handle,
-            label: label,
+            label,
             type: handle.type,
             url: URL.createObjectURL(handle), // TODO see if need to free on delete
           }
