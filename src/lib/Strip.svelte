@@ -112,21 +112,21 @@
   {id}>
   <div class="controls">
     <slot></slot>
-    {#if hasSolo}
-      <label
-        ><input
+    <div class="buttons">
+      {#if hasSolo}
+        <input
           type="checkbox"
           id={`solo-${id}`}
+          class="solobtn"
           bind:checked={solo} />
-        Solo</label>
-    {/if}
-    <label
-      ><input
+      {/if}
+      <input
         type="checkbox"
         id={`mute-${id}`}
+        class="mutebtn"
         disabled={muteDisabled}
         bind:checked={mute} />
-      Mute</label>
+    </div>
   </div>
   <div class="strip-wrapper">
     <Fader
@@ -156,6 +156,11 @@
     padding-top: 0.5em;
     padding-bottom: 0.5em;
   }
+  .buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 0.5rem;
+  }
   .label {
     display: inline-flex;
     justify-content: center;
@@ -167,7 +172,78 @@
     padding: 3px;
     border: solid black 1px;
     border-radius: 3px;
-    margin-top: 5px;
+    margin-top: 4px;
     background-color: lightgoldenrodyellow;
   }
+
+  input[type='checkbox'] {
+    box-sizing: border-box;
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    border-width: 3px;
+    border-radius: 4px;
+    appearance: none;
+    border-style: outset;
+    content: 'x';
+  }
+  input[type='checkbox']:checked {
+    border-style: inset;
+  }
+  input[type='checkbox']:disabled {
+    filter: grayscale(50%);
+  }
+  input[type='checkbox']:checked:disabled {
+    filter: grayscale(25%);
+  }
+  .solobtn {
+    background: rgb(238, 235, 189);
+    border-color: rgb(238, 235, 189);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><text x="6" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 151, 1)">S</text></svg>');
+  }
+  .solobtn:checked {
+    background: yellow;
+    border-color: yellow;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><text x="6" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 151, 1)">S</text></svg>');
+  }
+  .mutebtn {
+    background: lightcoral;
+    border-color: lightcoral;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><text x="4" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 1, 1)">M</text></svg>');
+  }
+  .mutebtn:checked {
+    background: red;
+    border-color: red;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><text x="4" y="19" style="font: bold 20px sans-serif; fill: rgb(151, 1, 1)">M</text></svg>');
+  }
+
+  /*
+  input[type='checkbox']:checked {
+    background-size: cover;
+    padding: 2px;
+  }
+
+    input[type='checkbox']:not(:disabled):checked {
+    border-color: var(--checkbox-checked-color);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><path style="fill: %23274c77" d="M11.941,28.877l-11.941-11.942l5.695-5.696l6.246,6.246l14.364-14.364L32,8.818"/></svg>');
+  }
+  input[type='checkbox']:disabled {
+    background-color: var(--checkbox-disabled-bg-color);
+  }
+
+  input[type='checkbox']:disabled:checked {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 32 32" xml:space="preserve"><path style="fill: %238b8c89" d="M11.941,28.877l-11.941-11.942l5.695-5.696l6.246,6.246l14.364-14.364L32,8.818"/></svg>');
+  }
+*/
+  /*  input[type='checkbox']:focus-visible {
+    outline: 6px solid var(--checkbox-hover-color);
+    transform: scale(1.05);
+  }
+  @media (hover: hover) {
+    input[type='checkbox']:not(:disabled):hover {
+      background-color: var(--checkbox-hover-color);
+      outline: 4px solid var(--checkbox-hover-color);
+      transform: scale(1.03);
+    }
+  }*/
 </style>
