@@ -41,7 +41,6 @@
   }
 
   :global(fieldset) {
-    display: block;
     margin-left: 2px;
     margin-right: 2px;
     padding-top: 0.35em;
@@ -51,13 +50,28 @@
     border: 2px groove (internal value);
   }
 
-  :global(legend) {
+  :global(dl) {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  :global(dt) {
+    font-weight: bold;
+  }
+
+  :global(dd) {
     display: block;
+    margin-left: 40px;
+  }
+
+  :global(legend) {
     padding-left: 2px;
     padding-right: 2px;
     border: none;
   }
-  
+
   :global(p) {
     margin-top: 1em;
     margin-bottom: 1em;

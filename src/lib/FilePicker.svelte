@@ -26,7 +26,7 @@
       }
       return { dir: directoryHandle.name, files: fileHandles }
     } else {
-      alert("Your browser doesn't support selecting a directory")
+      alert("Your browser doesn't support selecting a folder")
     }
   }
 

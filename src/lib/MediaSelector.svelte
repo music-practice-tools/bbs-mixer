@@ -59,7 +59,7 @@
   <fieldset id="buttons">
     <legend>Select audio files to load into mixer tracks.</legend>
     <FilePicker
-      buttonText="Directory"
+      buttonText="Folder"
       on:filesSelected={handleFiles} />
     <!--    <FilePicker
       buttonText="Directory 2"

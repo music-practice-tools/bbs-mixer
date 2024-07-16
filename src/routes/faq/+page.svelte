@@ -1,36 +1,75 @@
 <script>
+  import Layout from '../+layout.svelte'
 </script>
 
-<p>
-  <strong>BBS Mixer</strong> is a web app for playing musical compositions purchased
-  from BBS.
-</p>
+<dl>
+  <dt>What is BBS Mixer?</dt>
+  <dd>
+    BBS Mixer is a web app for playing audio files provided with musical
+    compositions purchased from BBS. The files usually match the parts in the
+    score.
+  </dd>
 
-<p>
-  As well as the score pdf you get a zip archive of audio files for the various
-  instrument parts. This mixer app lets you explore the composition by changing
-  part levels or playing only specific parts, perhaps to supplement live
-  players.
-</p>
+  <dt>What does BBS Mixer do?</dt>
+  <dd>
+    BBS Mixer is similar to any music player that plays audio files downloaded
+    onto your computer. However, rather than playing a single file at a time, it
+    plays a set of related part files, keeping them synchronised. In addition,
+    you can adjust the volume levels of the tracks. You can also mute or solo
+    several tracks at once. The play position in the track can be changed too
+    (AKA scrubbing).
+  </dd>
 
-<ul role="list">
-  <li>Load a directory of the unzipped audio files on your computer.</li>
-  <li>Play, rewind and scrub to a specific position in the track.</li>
-  <li>Adjust part levels, mute them or solo one or more.</li>
-</ul>
+  <dt>Why would I use it?</dt>
+  <dd>
+    In addition to playing the full score orchestration it is possible to
+    selectively play or leave out various instruments. This allows the study of
+    individual or related parts. Plus, the pre recorded tracks can also be used
+    to substitute for missing performers in an orchestra or band.
+  </dd>
 
-<p>
-  Note, selecting directories is inconsistently supported across web browsers
-  and you may need to accept access to the files.
-</p>
+  <dt>How do I get BBS Mixer?</dt>
+  <dd>
+    BBS Mixer is a available as free download from a link supplied when you
+    purchase music from BBS. If you need to get it again then ????.
+  </dd>
 
-<p>
-  The channel label is derived from the filenames. Any extension (eg .mp3) is
-  dropped. In addition any leading digits and a space are also dropped but allow
-  control of the order of the channels. For example, the files named "02
-  tuba.mp3" and "01 piano.mp3" will result in ordered tracks tracks with labels
-  "piano" and "tuba"
-</p>
+  <dt>How do I play audio files?</dt>
+  <dd>
+    When you purchase a score from BBS you can download a zip archive of audio
+    files for the various instrument parts. Simply <a
+      href="https://support.apple.com/en-gb/guide/mac-help/mchlp2528/mac"
+      >unzip</a> the files into a folder and then open that folder with the BBS Mixer.
+    Then hit the play button as usual.
+  </dd>
+
+  <dt>How do I select a folder?</dt>
+  <dd>
+    An operating system file selection box is presented and the current folder
+    is usually shown at the top, Sometimes no files or folders are shown but the
+    current folder can still be selected. Selecting folders is inconsistently
+    supported across web browsers and you may need to accept access to the files
+    after selecting the folder. In general Chrome provides the smoothest
+    experience.
+  </dd>
+
+  <dt>How are the channels ordered and the labels decided?</dt>
+  <dd>
+    The channel labels are derived from the filenames. the files and so the
+    channels are ordered alphabetically, eg "piano" appears to the left of
+    "tuba". Any file extension (eg .mp3) is dropped from the label. In addition,
+    any leading digits followed by a space are also dropped but allow control of
+    the order of the channels. So for example, the files "01 tuba.mp3" and "02
+    piano.mp3" will result in "tuba" followed by "piano".
+  </dd>
+
+  <dt>Can I play other audio files?</dt>
+  <dd>
+    Most audio file formats are supported. Obviously, the files in a folder need
+    to be designed to be played together. The files created by stem extraction
+    tools, for example, work well.
+  </dd>
+</dl>
 
 <style>
 </style>
