@@ -57,15 +57,15 @@
   </nav>
 
   <fieldset id="buttons">
-    <legend>Select audio files to load into mixer tracks.</legend>
+    <legend>Select audio files to load into mixer.</legend>
     <FilePicker
-      buttonText="Folder"
+      buttonText="Choose Folder"
       on:filesSelected={handleFiles} />
     <!--    <FilePicker
       buttonText="Directory 2"
       on:filesSelected={handleFiles2} />-->
 
-    <button on:click={handleClear}>Clear</button>
+    <button on:click={handleClear}>Empty All</button>
   </fieldset>
 </dialog>
 

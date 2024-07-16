@@ -34,8 +34,8 @@
   }
 
   :global(h1) {
-    font-size: 1.5rem;
-    font-weight: 500;
+    font-size: 1.6rem;
+    font-weight: 600;
     line-height: 1;
     margin-left: 1rem;
   }
@@ -108,11 +108,13 @@
 
   :global(a) {
     font-weight: 500;
-    color: var(--link-color);
     text-decoration: underline;
-    margin-left: 5px;
     font-size: inherit;
     cursor: pointer;
+  }
+  :global(nav a) {
+    margin-left: 1em;
+    font-size: larger;
   }
 
   /*
