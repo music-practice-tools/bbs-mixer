@@ -4,7 +4,8 @@
   export let className = 'transport'
   export let id = 'transport'
   export let progress = { playing: false, duration: 0, current: 0 }
-  
+  export let dirName = ''
+
   const audioContext = getContext('audioContext')
   const mediaAction$ = getContext('mediaAction$')
 
@@ -50,27 +51,38 @@
 <div
   {id}
   class="component {className}">
-  <button on:click={handleSkipBack}>&#x23EE;</button>
-  <button
-    id="play"
-    on:click={handlePlay}
-    aria-label={progress.playing ? 'pause' : 'play'}>
-    <span>{progress.playing ? '\u{23F8}' : '\u{23F5}'}</span>
-  </button>
-  <div id="current">{formatTime(progress.current)}</div>
-  <input
-    id="progress"
-    type="range"
-    min="0"
-    value={progress.current}
-    max={progress.duration}
-    on:mousedown={() => handleScrubSelect(false)}
-    on:touchstart={() => handleScrubSelect(false)}
-    on:mouseup={() => handleScrubSelect(true)}
-    on:touchend={() => handleScrubSelect(true)}
-    on:input={handleScrub} />
-  <div id="duration">{formatTime(progress.duration)}</div>
-  <div id="rate">({`${audioContext.sampleRate / 1000} kHz)`}</div>
+  <div id="info">
+    <span><span class="infolabel">Folder:</span> {dirName}</span>
+    <span
+      ><span class="infolabel">Sample Rate:</span>
+      <span id="rate">{`${audioContext.sampleRate / 1000} kHz`}</span></span>
+  </div>
+  <div id="controls">
+    <div>
+      <button on:click={handleSkipBack}>&#x23EE;</button>
+      <button
+        id="play"
+        on:click={handlePlay}
+        aria-label={progress.playing ? 'pause' : 'play'}>
+        <span>{progress.playing ? '\u{23F8}' : '\u{23F5}'}</span>
+      </button>
+    </div>
+    <div id="pant">
+      <div id="current">{formatTime(progress.current)}</div>
+      <input
+        id="progress"
+        type="range"
+        min="0"
+        value={progress.current}
+        max={progress.duration}
+        on:mousedown={() => handleScrubSelect(false)}
+        on:touchstart={() => handleScrubSelect(false)}
+        on:mouseup={() => handleScrubSelect(true)}
+        on:touchend={() => handleScrubSelect(true)}
+        on:input={handleScrub} />
+      <div id="duration">{formatTime(progress.duration)}</div>
+    </div>
+  </div>
 </div>
 
 <style>
@@ -80,13 +92,33 @@
     font-family: serif; /* stops annoying blue background in unicode chars*/
   }
   .component {
+    width: 100%;
     padding-left: 1em;
     padding-right: 1em;
     display: flex;
+    flex-direction: column;
     align-items: center;
   }
+  #info {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+  }
+  .infolabel {
+    font-weight: 500;
+  }
+  #controls {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+  }
+  #pant {
+    display: flex;
+  }
   #progress {
-    width: 20em;
+    width: 25em;
   }
   #current,
   #duration {

@@ -9,17 +9,20 @@
 </svelte:head>
 
 <header>
-  <img
-    src={logo}
-    title="BBS Mixer"
-    class="logo"
-    alt="logo" />
-  <h1>{$page.data.title}</h1>
+  <a href="/">
+    <img
+      src={logo}
+      title="BBS Mixer - Home"
+      class="logo"
+      alt="logo" /></a>
   <nav>
-    <a
-      href={$page.data.nav.href}
-      data-sveltekit-reload>{$page.data.nav.label}</a>
+    {#each $page.data.nav as nav}
+      <a
+        href={nav.href}
+        data-sveltekit-reload>{nav.label}</a>
+    {/each}
   </nav>
+  <h1 id="title">{$page.data.title}</h1>
 </header>
 
 <slot></slot>
@@ -37,6 +40,24 @@
     margin-left: 1rem;
   }
 
+  :global(fieldset) {
+    display: block;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-top: 0.35em;
+    padding-bottom: 0.625em;
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    border: 2px groove (internal value);
+  }
+
+  :global(legend) {
+    display: block;
+    padding-left: 2px;
+    padding-right: 2px;
+    border: none;
+  }
+  
   :global(p) {
     margin-top: 1em;
     margin-bottom: 1em;
@@ -61,8 +82,14 @@
   header {
     margin-bottom: 0.5rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
+    gap: 1em;
+  }
+
+  #title {
+    flex-grow: 2;
+    text-align: center;
   }
 
   :global(a) {

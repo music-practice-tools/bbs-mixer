@@ -24,7 +24,7 @@
 </script>
 
 <script>
-  import { getContext } from 'svelte'
+  import { getContext, onMount } from 'svelte'
 
   import MediaSelector from '$lib/MediaSelector.svelte'
   import Transport from '$lib/Transport.svelte'
@@ -43,13 +43,29 @@
   let progress = { ...defaultProgress }
   let canPlay = false
   let mymix = false
+  let mediaSelector
+  let dirName = ''
 
-  function handleMediaSelected({ detail: { media, inst } }) {
+  onMount(() => {
+    // can find no other way to pass a function to a nav item
+    const nav = document.querySelector('nav')
+    if (nav.firstElementChild.getAttribute('id') != 'loadMS') {
+      nav.insertAdjacentHTML('afterbegin', '<a id="loadMS" href="#">Load</a>')
+      nav.firstElementChild.onclick = () => {
+        mediaSelector.$set({ show: false }) // in case was closed by Esc
+        mediaSelector.$set({ show: true })
+      }
+    }
+  })
+
+  function handleMediaSelected({ detail: { dir, media, inst } }) {
     if (media.length == 0) {
+      dirName = undefined
       fileInfos = []
       canPlay = false
       progress = { ...defaultProgress }
     } else {
+      dirName = dir
       const audio = new Audio()
       fileInfos = media
         .map((handle) => {
@@ -57,6 +73,7 @@
             /^\d*\s*(.*?)(?:\.[^.]*)?$/g.exec(handle.name) ?? handle.name
           const label = result !== null ? result[1] : handle.name
           return {
+            dir,
             handle,
             label,
             type: handle.type,
@@ -128,9 +145,14 @@
   {id}
   class="component {className}">
   <div id="controls">
-    <MediaSelector on:mediaSelected={handleMediaSelected}></MediaSelector>
+    <MediaSelector
+      bind:this={mediaSelector}
+      show={true}
+      on:mediaSelected={handleMediaSelected}></MediaSelector>
     {#if canPlay}
-      <Transport {progress}></Transport>
+      <Transport
+        {progress}
+        {dirName}></Transport>
     {/if}
   </div>
 

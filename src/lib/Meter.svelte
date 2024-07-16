@@ -73,14 +73,17 @@
     }
   }
 
-  let drawers = []
+  let drawers = {}
   let afrId
+  function unregisterDrawMeter(id) {
+    delete drawers[id]
+  }
   function registerDrawMeter(id, drawer) {
-    drawers.push(drawer)
+    drawers[id] = drawer
 
     const drawAll = () => {
       const afrId = requestAnimationFrame(drawAll)
-      drawers.forEach((drawer) => {
+      Object.entries(drawers).forEach(([id, drawer]) => {
         drawer()
       })
       return afrId
@@ -114,10 +117,10 @@
   }
 
   onDestroy(() => {
-    if ((afrId, false)) {
+    if (afrId) {
       cancelAnimationFrame(afrId)
-      afrId = undefined
     }
+    unregisterDrawMeter(id)
     if (cleanOnDestroy) {
       cleanOnDestroy()
     }

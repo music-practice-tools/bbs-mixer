@@ -47,11 +47,10 @@
     max-width: 8em;
     min-width: 8em;
   }
-  :global(#media-selector) {
-    margin-left: 5px;
-  }
   :global(#transport) {
-    margin-left: 1em;
+    width: 100%;
+    margin-left: 0.3em;
+    margin-bottom: 0.3em;
   }
   :global(#channels) {
     border: 0px;

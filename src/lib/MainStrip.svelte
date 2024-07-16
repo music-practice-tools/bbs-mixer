@@ -66,7 +66,7 @@
   }
 
   .flash:not(:disabled) {
-    animation-duration: 4s;
+    animation-duration: 3s;
     animation-iteration-count: infinite;
   }
   .flash.solobtn {

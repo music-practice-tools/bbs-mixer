@@ -24,7 +24,7 @@
       for await (const fileHandle of getDirectoryFiles(directoryHandle)) {
         fileHandles.push(fileHandle)
       }
-      return fileHandles
+      return { dir: directoryHandle.name, files: fileHandles }
     } else {
       alert("Your browser doesn't support selecting a directory")
     }
@@ -34,7 +34,7 @@
     try {
       return await askForDirectoryFiles()
     } catch {
-      return []
+      return { dir: '', files: [] }
     }
   }
 </script>
@@ -50,23 +50,26 @@
   let files = []
 
   async function handleButton() {
-    files = await filePicker()
-    if (files.length) {
+    const files = await filePicker()
+    if (files.files.length) {
       dispatch('filesSelected', files)
     }
   }
 
   function handleChange() {
-    dispatch('filesSelected', [...files]) // convert to an array
+    dispatch('filesSelected', { dir: '', files: [...files] }) // convert to an array
   }
 </script>
 
 <div class="file-picker">
   {#if window.showDirectoryPicker}
-    <button on:click={handleButton}>{buttonText}</button>
+    <button
+      autofocus
+      on:click={handleButton}>{buttonText}</button>
   {:else}
     <button on:click={input.click()}>{buttonText}</button>
     <input
+      autofocus
       type="file"
       webkitdirectory
       id="files"

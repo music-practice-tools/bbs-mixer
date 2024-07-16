@@ -5,7 +5,7 @@
 </script>
 
 <script>
-  import { onMount, onDestroy, getContext, createEventDispatcher } from 'svelte'
+  import { onMount, getContext, createEventDispatcher } from 'svelte'
 
   import Strip from '$lib/Strip.svelte'
 
