@@ -52,7 +52,9 @@
   {id}
   class="component {className}">
   <div id="info">
-    <span><span class="infolabel">Folder:</span> {dirName}</span>
+    {#if dirName}
+      <span><span class="infolabel">Folder:</span>{dirName}</span>
+    {/if}
     <span
       ><span class="infolabel">Sample Rate:</span>
       <span id="rate">{`${audioContext.sampleRate / 1000} kHz`}</span></span>
