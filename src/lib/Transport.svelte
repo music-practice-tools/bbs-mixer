@@ -1,5 +1,5 @@
 <script>
-  import { getContext, tick, createEventDispatcher } from 'svelte'
+  import { getContext, tick } from 'svelte'
 
   export let className = 'transport'
   export let id = 'transport'
@@ -28,7 +28,6 @@
   }
 
   let scrubbing = false
-  const dispatch = createEventDispatcher()
   function handleScrub({ target: { value } }) {
     $mediaAction$ = { verb: 'scrub', detail: value }
   }
@@ -77,7 +76,7 @@
         min="0"
         value={progress.current}
         max={progress.duration}
-        on:mousedown={() => handleScrubSelect(false)}
+        on:mousedown={(ev) => handleScrubSelect(false)}
         on:touchstart={() => handleScrubSelect(false)}
         on:mouseup={() => handleScrubSelect(true)}
         on:touchend={() => handleScrubSelect(true)}

@@ -21,8 +21,8 @@
       playing,
       channel: channelNumber,
       ready: elemReady,
-      duration: elemReady ? audioElement.duration : 0,
-      current: elemReady ? audioElement.currentTime : 0,
+      duration: audioElement.duration,
+      current: audioElement.currentTime, // note when settng CT readyState may become 1
     }
   }
   export let mainBus
