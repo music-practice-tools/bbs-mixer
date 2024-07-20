@@ -6,30 +6,16 @@
     const url = URL.createObjectURL(fileHandle) // TODO see if need to free on delete
     return { url, label, type }
   }
-
-  /*  function canPlayType(info) {
-    return new Promise((resolve, reject) => {
-      let audio = new Audio(info.url)
-      audio.onerror = () => {
-        reject(info)
-      }
-      audio.onloadedmetadata = () => {
-        audio.url = undefined // might stop further loading
-        audio = undefined
-        resolve(info)
-      }
-    })
-  }
-*/
 </script>
 
 <script>
-  import { getContext, onMount } from 'svelte'
+  import { getContext } from 'svelte'
 
-  import MediaSelector from '$lib/MediaSelector.svelte'
   import Transport from '$lib/Transport.svelte'
   import ChannelStrip from '$lib/ChannelStrip.svelte'
   import MainStrip from '$lib/MainStrip.svelte'
+
+  import { media$ } from '$lib/Nav.svelte'
 
   export let className = 'channels'
   export let id = 'channels'
@@ -42,23 +28,9 @@
   let channelRefs = []
   let progress = { ...defaultProgress }
   let canPlay = false
-  let mymix = false
-  let mediaSelector
   let dirName = ''
 
-  onMount(() => {
-    // can find no other way to pass a function to a nav item
-    const nav = document.querySelector('nav')
-    if (nav.firstElementChild.getAttribute('id') != 'loadMS') {
-      nav.insertAdjacentHTML('afterbegin', '<a id="loadMS" href="#">Load</a>')
-      nav.firstElementChild.onclick = () => {
-        mediaSelector.$set({ show: false }) // in case was closed by Esc
-        mediaSelector.$set({ show: true })
-      }
-    }
-  })
-
-  function handleMediaSelected({ detail: { dir, media, inst } }) {
+  function handleMedia({ dir, media }) {
     if (media.length == 0) {
       dirName = undefined
       fileInfos = []
@@ -83,18 +55,16 @@
         .filter(({ type }) => audio.canPlayType(type))
       progress = { ...defaultProgress }
       // canPlay will be set via handleReady
-      mymix = inst == 2
-      if (mymix) {
-        console.info('Using worklet to mix')
-        mainBusReady = createAudioProcessor(audioContext, fileInfos.length)
-      } else {
-        mainBusReady = new Promise((resolve) => {
-          const mainBus = audioContext.createGain()
-          mainBus.gain.value = 1.0
-          resolve(mainBus)
-        })
-      }
+      mainBusReady = new Promise((resolve) => {
+        const mainBus = audioContext.createGain()
+        mainBus.gain.value = 1.0
+        resolve(mainBus)
+      })
     }
+  }
+
+  $: {
+    handleMedia($media$)
   }
 
   async function createAudioProcessor(audioContext, numberOfInputs) {
@@ -145,10 +115,6 @@
   {id}
   class="component {className}">
   <div id="controls">
-    <MediaSelector
-      bind:this={mediaSelector}
-      show={true}
-      on:mediaSelected={handleMediaSelected}></MediaSelector>
     {#if canPlay}
       <Transport
         {progress}
@@ -167,7 +133,7 @@
             {label}
             {url}
             channelNumber={i + 1}
-            mainBus={{ node, index: mymix ? i : 0 }} />
+            mainBus={{ node, index: 0 }} />
         {:else}
           <span id="no-strips"
             >Mixer controls will appear once audio tracks are loaded.</span>

@@ -76,7 +76,7 @@
         min="0"
         value={progress.current}
         max={progress.duration}
-        on:mousedown={(ev) => handleScrubSelect(false)}
+        on:mousedown={() => handleScrubSelect(false)}
         on:touchstart={() => handleScrubSelect(false)}
         on:mouseup={() => handleScrubSelect(true)}
         on:touchend={() => handleScrubSelect(true)}
@@ -117,6 +117,7 @@
   }
   #pant {
     display: flex;
+    gap: 0.5em;
   }
   #progress {
     width: 25em;

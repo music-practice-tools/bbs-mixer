@@ -42,8 +42,6 @@
 <script>
   import { createEventDispatcher } from 'svelte'
 
-  export let buttonText = 'Pick'
-
   const dispatch = createEventDispatcher()
 
   let input
@@ -64,12 +62,10 @@
 <div class="file-picker">
   {#if window.showDirectoryPicker}
     <button
-      autofocus
-      on:click={handleButton}>{buttonText}</button>
+      on:click={handleButton}><slot></slot></button>
   {:else}
-    <button on:click={input.click()}>{buttonText}</button>
+    <button on:click={input.click()}><slot></slot></button>
     <input
-      autofocus
       type="file"
       webkitdirectory
       id="files"
@@ -82,6 +78,7 @@
 
 <style>
   input {
+    display: hidden;
     opacity: 0;
     width: 0px;
   }

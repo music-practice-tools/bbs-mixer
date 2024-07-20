@@ -16,13 +16,12 @@
   export let url = ''
   export let monitorProgress = false
   export function getProgress() {
-    const elemReady = audioElement && audioElement.readyState >= 2 // maybe 2 ?
     return {
       playing,
       channel: channelNumber,
-      ready: elemReady,
-      duration: audioElement.duration,
-      current: audioElement.currentTime, // note when settng CT readyState may become 1
+      ready: audioElement && audioElement.readyState >= 2,
+      duration: (audioElement && audioElement.duration) ?? 0,
+      current: (audioElement && audioElement.currentTime) ?? 0, // note when settng CT readyState may become 1
     }
   }
   export let mainBus

@@ -1,6 +1,7 @@
 <script>
-  import logo from '$lib/assets/logo-512x512.png'
   import { page } from '$app/stores'
+  import logo from '$lib/assets/logo-512x512.png'
+  import Nav from '$lib/Nav.svelte'
 </script>
 
 <svelte:head>
@@ -9,20 +10,13 @@
 </svelte:head>
 
 <header>
-  <a href="/">
-    <img
-      src={logo}
-      title="BBS Mixer - Home"
-      class="logo"
-      alt="logo" /></a>
-  <nav>
-    {#each $page.data.nav as nav}
-      <a
-        href={nav.href}
-        data-sveltekit-reload>{nav.label}</a>
-    {/each}
-  </nav>
+  <Nav></Nav>
   <h1 id="title">{$page.data.title}</h1>
+  <img
+    src={logo}
+    title="BBS Mixer - Home"
+    class="logo"
+    alt="logo" />
 </header>
 
 <slot></slot>
