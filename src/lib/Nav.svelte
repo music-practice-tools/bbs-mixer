@@ -10,7 +10,6 @@
   import FilePicker from '$lib/FilePicker.svelte'
 
   function handleFiles(event) {
-    console.info(event.detail)
     $media$ = { dir: '', media: [] } // clear
     tick().then(() => {
       // ensure all get deleted before we add
