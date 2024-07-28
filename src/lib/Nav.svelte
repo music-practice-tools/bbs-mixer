@@ -7,6 +7,12 @@
 
   const audioContext = new AudioContext()
 
+  function glitchHandler(name) {
+    return (event) => {
+      console.info(`Glitch "${name}" in ${event.target.id}`)
+    }
+  }
+
   async function handleFilesTest(event) {
     const { files } = event.detail
 
@@ -45,6 +51,7 @@
     fileInfos.forEach((el, i) => {
       const strip = {}
       strip.audioElement = new Audio(el.url)
+      strip.audioElement.id = i
       strip.audioElement.preload = 'auto' // might not matter
       readyChannels.push(
         new Promise((resolve) => {
@@ -53,6 +60,9 @@
           }
         }),
       )
+      strip.audioElement.onerror = glitchHandler('error')
+      strip.audioElement.onstalled = glitchHandler('stalled')
+      strip.audioElement.onwaiting = glitchHandler('waiting')
 
       strip.source = audioContext.createMediaElementSource(strip.audioElement)
       //const gainNode = audioContext.createGain()
@@ -66,6 +76,7 @@
 
     // play
     strips.forEach((strip, i) => {
+      console.log(i, audioContext.currentTime)
       strip.audioElement.play()
     })
   }
