@@ -14,9 +14,11 @@
     strips.forEach((strip) => {
       strip.audioElement.pause()
       strip.source.disconnect()
+      delete strip.source // probably not useful
+      delete strip.audioElement
     })
     strips = []
-    await tick()
+    //    await tick()
 
     // get files
     const fileInfos = [...files]
@@ -37,10 +39,21 @@
       audioContext.resume()
     }
 
+    let readyChannels = []
+
     // set up
-    fileInfos.forEach((el) => {
+    fileInfos.forEach((el, i) => {
       const strip = {}
       strip.audioElement = new Audio(el.url)
+      strip.audioElement.preload = 'auto' // might not matter
+      readyChannels.push(
+        new Promise((resolve) => {
+          strip.audioElement.oncanplaythrough = () => {
+            resolve(i)
+          }
+        }),
+      )
+
       strip.source = audioContext.createMediaElementSource(strip.audioElement)
       //const gainNode = audioContext.createGain()
       strip.source.connect(audioContext.destination)
@@ -49,12 +62,10 @@
     })
 
     // wait for ready
-  //    let readyChannels = new Set()
-  //    readyChannels.add(channelNumber)
+    await Promise.all(readyChannels)
 
     // play
     strips.forEach((strip, i) => {
-      console.log(i, strip.audioElement.readyState)
       strip.audioElement.play()
     })
   }
