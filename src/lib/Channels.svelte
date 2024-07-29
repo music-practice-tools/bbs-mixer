@@ -60,7 +60,7 @@
         .filter(({ type }) => audio.canPlayType(type))
       progress = { ...defaultProgress }
       // canPlay will be set via handleReady
-      // mainBusReady = createAudioProcessor(audioContext, fileHandles.length)
+      // mainBusReady = createAudioProcessor(audioContext, fileInfos.length)
       mainBusReady = new Promise((resolve) => {
         const mainBus = audioContext.createGain()
         mainBus.gain.value = 1.0
@@ -91,7 +91,7 @@
     node.channelCount = 2
     node.channelCountMode = 'explicit'
     node.onprocessorerror = (event) => {
-      console.error('Audio worklet node processing error!', event.message)
+      console.error(`Audio worklet node processing error!: ${event.message}`)
     }
     return node
   }

@@ -54,7 +54,7 @@
   }
 
   function processVerb(verb, detail) {
-    foo(verb)
+    //foo(verb)
 
     switch (verb) {
       case 'pause':
@@ -65,7 +65,11 @@
       case 'play':
         if (audioElement) {
           //audioElement[verb == 'pause' ? 'pause' : 'play']()
-          audioElement.play()
+          console.log(
+            `b4 ${channelNumber}  ${audioContext.currentTime} ${audioElement.readyState}`,
+          )
+          //setTimeout(() => audioElement.play(), 0)
+          console.log(`af ${channelNumber} ${audioContext.currentTime}`)
         }
         break
       case 'skipback':
