@@ -3,7 +3,9 @@
   import { writable } from 'svelte/store'
 
   import Channels from '$lib/Channels.svelte'
+
   import { mediaAction$ } from '$lib/ChannelStrip.svelte'
+  import { media$ } from '$lib/Nav.svelte'
 
   export let className = 'mixer'
   export let id = 'mixer'
@@ -22,6 +24,7 @@
   setContext('solo$', solo$)
   setContext('mute$', mute$)
   setContext('mediaAction$', mediaAction$)
+  setContext('media$', media$)
 </script>
 
 <div

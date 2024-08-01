@@ -37,6 +37,8 @@
       return { dir: '', files: [] }
     }
   }
+
+  let cn = 0
 </script>
 
 <script>
@@ -61,14 +63,13 @@
 
 <div class="file-picker">
   {#if window.showDirectoryPicker}
-    <button
-      on:click={handleButton}><slot></slot></button>
+    <button on:click={handleButton}><slot></slot></button>
   {:else}
     <button on:click={input.click()}><slot></slot></button>
     <input
+      id={'fp' + ++cn}
       type="file"
       webkitdirectory
-      id="files"
       accept="audio/*"
       bind:this={input}
       bind:files
@@ -78,8 +79,6 @@
 
 <style>
   input {
-    display: hidden;
-    opacity: 0;
-    width: 0px;
+    display: none;
   }
 </style>
