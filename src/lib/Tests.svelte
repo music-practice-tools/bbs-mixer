@@ -3,9 +3,13 @@
 
   const audioContext = new AudioContext()
 
+  function log(...args) {
+    console.info(...args)
+  }
+
   function glitchHandler(name) {
     return (event) => {
-      console.info(`Glitch "${name}" in ${event.target.id}`)
+      log(`Glitch "${name}" in ${event.target.id}`)
     }
   }
 
@@ -61,11 +65,7 @@
         }),
       )
       strip.audioElement.onplay = (el) => {
-        console.info(
-          'Play ' + el.target.id,
-          audioContext.currentTime,
-          strip.info.label,
-        )
+        log('Play ' + el.target.id, audioContext.currentTime, strip.info.label)
       }
       strip.audioElement.onerror = glitchHandler('error')
       strip.audioElement.onstalled = glitchHandler('stalled')
