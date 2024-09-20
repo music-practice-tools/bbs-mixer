@@ -10,14 +10,28 @@
         #ndp-input {
             display: none;
         }
+
+        #container {
+            width: 90%;
+            margin-left: 5%;
+            display: flex;
+        }
+
+        #controls {
+            flex-direction: column;
+            margin: 1rem;
+        }
+
+        #text {
+            width: 100%;
+            margin: 1rem;
+            padding: 0.5rem;
+            border: 1px black solid;
+        }
     </style>
 
     <script>
         'use strict'
-
-        function log(...args) {
-            console.info(...args)
-        }
 
         let strips = []
 
@@ -25,24 +39,15 @@
 
         function glitchHandler(name) {
             return (event) => {
-                log(`Glitch "${name}" in ${event.target.id}`)
+                logText(`Glitch "${name}" in ${event.target.id}`)
             }
         }
 
         async function handleFilesStreamTest(event) {
-            const { dir, files } = event.detail
-
-            // cleanup
-            strips.forEach((strip) => {
-                strip.audioElement.pause()
-                strip.source.disconnect()
-                delete strip.source // probably not useful
-                delete strip.audioElement
-            })
-            strips = []
-            //    await tick()
+            const { dir, files } = picked
 
             // get files
+            const player = document.querySelector('#player')
             const fileInfos = [...files]
                 .map((handle) => {
                     const result =
@@ -55,10 +60,13 @@
                         url: URL.createObjectURL(handle), // TODO see if need to free on delete
                     }
                 })
-                .filter(
-                    ({ type }) =>
-                        type == 'audio/mpeg' || type == 'audio/wav' || type == 'audio/x-wav',
-                )
+                .map((info) => {
+                    info.canPlay = player.canPlayType(info.type) == "" ? false : true
+                    return info
+                })
+            console.log(picked)
+            logText(`directory: ${dir}`, `files:\n${fileInfos.map(fi => `  ${fi.canPlay ? "" : "X"}${fi.type} ${fi.label}`).join('\n')}`)
+            return
 
             if (audioContext.state === 'suspended') {
                 audioContext.resume()
@@ -81,7 +89,7 @@
                     }),
                 )
                 strip.audioElement.onplay = (el) => {
-                    log(
+                    logText(
                         'Play ' + el.target.id,
                         audioContext.currentTime,
                         strip.info.label,
@@ -107,17 +115,53 @@
             })
         }
 
-        let files = []
+        // async generator, not recursive
+        async function* getDirectoryFiles(dirHandle) {
+            if (dirHandle.kind === 'directory') {
+                for await (const handle of dirHandle.values()) {
+                    if (handle.kind === 'file') {
+                        const file = await handle.getFile()
+                        if (file !== null) {
+                            yield file
+                        }
+                    }
+                }
+            }
+        }
+        async function askForDirectoryFiles() {
+            const directoryHandle = await window.showDirectoryPicker({
+                mode: 'read',
+                id: 'bbsmixer',
+                startIn: 'music',
+            })
+            let fileHandles = []
+            for await (const fileHandle of getDirectoryFiles(directoryHandle)) {
+                fileHandles.push(fileHandle)
+            }
+            return { dir: directoryHandle.name, files: fileHandles }
+        }
 
-        async function handleSelectFolder() {
-            const files = await filePicker()
-            if (files.files.length) {
-                //dispatch('filesSelected', files)
+
+        async function filePicker() {
+            try {
+                return await askForDirectoryFiles()
+            } catch {
+                return { dir: '', files: [] }
             }
         }
 
+        let picked = { dir: '', files: [] }
+
+        async function handleSelectFolder() {
+            picked = await filePicker()
+        }
+
         function handleChange(event) {
-            file = [...event.target.files]
+            const files = [...event.target.files]
+            if (files.length) {
+                const dir = files[0].webkitRelativePath.split('/')[0]
+                picked = { dir, files }
+            }
         }
 
     </script>
@@ -125,22 +169,44 @@
 
 <body>
     <h1>Web Audio Tests</h1>
-    <button id="hdp" onclick="handleSelectFolder(event)">Select Folder</button>
-    <div id="ndp">
-        <button onclick="document.querySelector('#ndp-input').click()">Select Folder</button>
-        <input id="ndp-input" type="file" webkitdirectory accept="audio/*" onchange="handleChange(event)" />
+    <audio id='player' onerror="glitchHandler('error')" onstalled="glitchHandler('stalled')"
+        onwaiting="glitchHandler('waiting')">
+    </audio>
+
+    <div id="container">
+        <div id="controls">
+            <div id="hdp">
+                <button onclick="handleSelectFolder(event)">Select Folder</button>
+            </div>
+            <div id="ndp">
+                <button onclick="document.querySelector('#ndp-input').click()">Select Folder</button>
+                <input id="ndp-input" type="file" webkitdirectory accept="audio/*" onchange="handleChange(event)" />
+            </div>
+
+            <button onclick="handleFilesStreamTest(event)">Stream Test</button>
+        </div>
+        <div id="text">
+        </div>
     </div>
 
-    <button onclick="handleFilesStreamTest(event)">Stream Test</button>
 </body>
 
 <script>
     'use strict'
-    if (window.showDirectoryPicker) {
-        document.body.removeChild(document.querySelector('#ndp'))
-    } else {
-        document.body.removeChild(document.querySelector('#hdp'))
 
+    function logText(...args) {
+        const textElement = document.querySelector('#text');
+        const text = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg).join('\n');
+        textElement.innerText += `${text}\n`;
+    }
+
+    const controls = document.querySelector('#controls')
+    if (window.showDirectoryPicker) {
+        logText('Using directory picker')
+        controls.removeChild(document.querySelector('#ndp'))
+    } else {
+        logText('Using file Picker')
+        controls.removeChild(document.querySelector('#hdp'))
     }
 </script>
 
