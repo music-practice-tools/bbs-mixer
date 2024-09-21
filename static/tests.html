@@ -256,13 +256,19 @@
         })
       logHeader()
       log.logText(
-        `directory: ${dir}`,
-        `files:\n${fileInfos
+        `Directory: ${dir}`,
+        `Files:\n${fileInfos
           .map((fi) => {
             const klass = fi.canPlay ? 'playable' : 'unplayable '
             return `<span class="file ${klass}"> ${fi.label}\t${fi.type}</span>`
           })
           .join('\n')}`
+      )
+      const nplayable = fileInfos.filter((fi) => fi.canPlay).length
+      log.logText(
+        `${nplayable} files${
+          nplayable != fileInfos.length ? ` of ${fileInfos.length}` : ``
+        } can play`
       )
     })
 
