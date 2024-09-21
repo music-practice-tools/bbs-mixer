@@ -248,6 +248,7 @@
             type: handle.type,
             canPlay,
             url: canPlay ? URL.createObjectURL(handle) : '', // TODO see if need to free on delete
+            size: handle.size / 1024 / 1024,
           }
         })
         .map((info) => {
@@ -260,7 +261,9 @@
         `Files:\n${fileInfos
           .map((fi) => {
             const klass = fi.canPlay ? 'playable' : 'unplayable '
-            return `<span class="file ${klass}"> ${fi.label}\t${fi.type}</span>`
+            return `<span class="file ${klass}"> ${fi.label}\t${
+              fi.type
+            }\t(${fi.size.toFixed(2)} MB)</span>`
           })
           .join('\n')}`
       )
