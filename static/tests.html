@@ -1,213 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="ie=edge" />
     <title>Web Audio Tests</title>
     <style>
-        #ndp-input {
-            display: none;
-        }
+      #ndp-input {
+        display: none;
+      }
 
-        #container {
-            width: 90%;
-            margin-left: 5%;
-            display: flex;
-        }
+      #container {
+        width: 90%;
+        margin-left: 5%;
+        display: flex;
+      }
 
-        #controls {
-            flex-direction: column;
-            margin: 1rem;
-        }
+      #controls {
+        flex-direction: column;
+        margin: 1rem;
+      }
 
-        #text {
-            width: 100%;
-            margin: 1rem;
-            padding: 0.5rem;
-            border: 1px black solid;
-        }
+      #log {
+        width: 100%;
+        margin: 1rem;
+        padding: 0.5rem;
+        border: 1px black solid;
+      }
     </style>
 
     <script>
-        'use strict'
+      'use strict'
 
-        let strips = []
+      let strips = []
 
-        const audioContext = new AudioContext()
+      const audioContext = new AudioContext()
 
-        function glitchHandler(name) {
-            return (event) => {
-                logText(`Glitch "${name}" in ${event.target.id}`)
-            }
+      function glitchHandler(name) {
+        return (event) => {
+          logText(`Glitch "${name}" in ${event.target.id}`)
+        }
+      }
+
+      async function handleFilesStreamTest(event) {
+        const { dir, files } = picked
+
+        return
+
+        if (audioContext.state === 'suspended') {
+          audioContext.resume()
         }
 
-        async function handleFilesStreamTest(event) {
-            const { dir, files } = picked
+        let readyChannels = []
 
-            // get files
-            const player = document.querySelector('#player')
-            const fileInfos = [...files]
-                .map((handle) => {
-                    const result =
-                        /^\d*\s*(.*?)(?:\.[^.]*)?$/g.exec(handle.name) ?? handle.name
-                    const label = result !== null ? result[1] : handle.name
-                    return {
-                        handle,
-                        label,
-                        type: handle.type,
-                        url: URL.createObjectURL(handle), // TODO see if need to free on delete
-                    }
-                })
-                .map((info) => {
-                    info.canPlay = player.canPlayType(info.type) == "" ? false : true
-                    return info
-                })
-            console.log(picked)
-            logText(`directory: ${dir}`, `files:\n${fileInfos.map(fi => `  ${fi.canPlay ? "" : "X"}${fi.type} ${fi.label}`).join('\n')}`)
-            return
-
-            if (audioContext.state === 'suspended') {
-                audioContext.resume()
-            }
-
-            let readyChannels = []
-
-            // set up
-            fileInfos.forEach((el, i) => {
-                const strip = {}
-                strip.info = el
-                strip.audioElement = new Audio(el.url)
-                strip.audioElement.id = i
-                strip.audioElement.preload = 'auto' // might not matter
-                readyChannels.push(
-                    new Promise((resolve) => {
-                        strip.audioElement.oncanplaythrough = () => {
-                            resolve(i)
-                        }
-                    }),
-                )
-                strip.audioElement.onplay = (el) => {
-                    logText(
-                        'Play ' + el.target.id,
-                        audioContext.currentTime,
-                        strip.info.label,
-                    )
-                }
-                strip.audioElement.onerror = glitchHandler('error')
-                strip.audioElement.onstalled = glitchHandler('stalled')
-                strip.audioElement.onwaiting = glitchHandler('waiting')
-
-                strip.source = audioContext.createMediaElementSource(strip.audioElement)
-                //const gainNode = audioContext.createGain()
-                strip.source.connect(audioContext.destination)
-
-                strips.push(strip)
+        // set up
+        fileInfos.forEach((el, i) => {
+          const strip = {}
+          strip.info = el
+          strip.audioElement = new Audio(el.url)
+          strip.audioElement.id = i
+          strip.audioElement.preload = 'auto' // might not matter
+          readyChannels.push(
+            new Promise((resolve) => {
+              strip.audioElement.oncanplaythrough = () => {
+                resolve(i)
+              }
             })
+          )
+          strip.audioElement.onplay = (el) => {
+            logText(
+              'Play ' + el.target.id,
+              audioContext.currentTime,
+              strip.info.label
+            )
+          }
+          strip.audioElement.onerror = glitchHandler('error')
+          strip.audioElement.onstalled = glitchHandler('stalled')
+          strip.audioElement.onwaiting = glitchHandler('waiting')
 
-            // wait for ready
-            await Promise.all(readyChannels)
+          strip.source = audioContext.createMediaElementSource(
+            strip.audioElement
+          )
+          //const gainNode = audioContext.createGain()
+          strip.source.connect(audioContext.destination)
 
-            // play
-            strips.forEach((strip, i) => {
-                strip.audioElement.play()
-            })
-        }
+          strips.push(strip)
+        })
 
-        // async generator, not recursive
-        async function* getDirectoryFiles(dirHandle) {
-            if (dirHandle.kind === 'directory') {
-                for await (const handle of dirHandle.values()) {
-                    if (handle.kind === 'file') {
-                        const file = await handle.getFile()
-                        if (file !== null) {
-                            yield file
-                        }
-                    }
-                }
+        // wait for ready
+        await Promise.all(readyChannels)
+
+        // play
+        strips.forEach((strip, i) => {
+          strip.audioElement.play()
+        })
+      }
+
+      // async generator, not recursive
+      async function* getDirectoryFiles(dirHandle) {
+        if (dirHandle.kind === 'directory') {
+          for await (const handle of dirHandle.values()) {
+            if (handle.kind === 'file') {
+              const file = await handle.getFile()
+              if (file !== null) {
+                yield file
+              }
             }
+          }
         }
-        async function askForDirectoryFiles() {
-            const directoryHandle = await window.showDirectoryPicker({
-                mode: 'read',
-                id: 'bbsmixer',
-                startIn: 'music',
-            })
-            let fileHandles = []
-            for await (const fileHandle of getDirectoryFiles(directoryHandle)) {
-                fileHandles.push(fileHandle)
-            }
-            return { dir: directoryHandle.name, files: fileHandles }
+      }
+      async function askForDirectoryFiles() {
+        const directoryHandle = await window.showDirectoryPicker({
+          mode: 'read',
+          id: 'bbsmixer',
+          startIn: 'music',
+        })
+        let fileHandles = []
+        for await (const fileHandle of getDirectoryFiles(directoryHandle)) {
+          fileHandles.push(fileHandle)
         }
+        return { dir: directoryHandle.name, files: fileHandles }
+      }
 
+      function sendPickedEvent(dir = '', files = []) {
+        event = new CustomEvent('pickedEvent', { detail: { dir, files } })
+        document.body.dispatchEvent(event)
+      }
 
-        async function filePicker() {
-            try {
-                return await askForDirectoryFiles()
-            } catch {
-                return { dir: '', files: [] }
-            }
+      async function handleSelectFolder() {
+        try {
+          const { dir, files } = await askForDirectoryFiles()
+          sendPickedEvent(dir, files)
+        } catch {
+          sendPickedEvent()
         }
+      }
 
-        let picked = { dir: '', files: [] }
-
-        async function handleSelectFolder() {
-            picked = await filePicker()
+      function handleChange(event) {
+        const files = [...event.target.files]
+        if (files.length) {
+          const dir = files[0].webkitRelativePath.split('/')[0]
+          sendPickedEvent(dir, files)
+        } else {
+          sendPickedEvent()
         }
-
-        function handleChange(event) {
-            const files = [...event.target.files]
-            if (files.length) {
-                const dir = files[0].webkitRelativePath.split('/')[0]
-                picked = { dir, files }
-            }
-        }
-
+      }
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <h1>Web Audio Tests</h1>
-    <audio id='player' onerror="glitchHandler('error')" onstalled="glitchHandler('stalled')"
-        onwaiting="glitchHandler('waiting')">
-    </audio>
+    <audio
+      id="player"
+      onerror="glitchHandler('error')"
+      onstalled="glitchHandler('stalled')"
+      onwaiting="glitchHandler('waiting')"></audio>
 
     <div id="container">
-        <div id="controls">
-            <div id="hdp">
-                <button onclick="handleSelectFolder(event)">Select Folder</button>
-            </div>
-            <div id="ndp">
-                <button onclick="document.querySelector('#ndp-input').click()">Select Folder</button>
-                <input id="ndp-input" type="file" webkitdirectory accept="audio/*" onchange="handleChange(event)" />
-            </div>
+      <div id="controls">
+        <div id="hdp">
+          <button onclick="handleSelectFolder(event)">Select Folder</button>
+        </div>
+        <div id="ndp">
+          <button onclick="document.querySelector('#ndp-input').click()">
+            Select Folder
+          </button>
+          <input
+            id="ndp-input"
+            type="file"
+            webkitdirectory
+            accept="audio/*"
+            onchange="handleChange(event)" />
+        </div>
 
-            <button onclick="handleFilesStreamTest(event)">Stream Test</button>
-        </div>
-        <div id="text">
-        </div>
+        <button onclick="handleFilesStreamTest(event)">Stream Test</button>
+      </div>
+      <pre id="log"></pre>
     </div>
+  </body>
 
-</body>
-
-<script>
+  <style>
+    .unplayable {
+      text-decoration-line: line-through;
+    }
+    #log {
+      tab-size: 32;
+    }
+    #log span:nth-of-type(even) {
+      background-color: #fbfaeb;
+    }
+  </style>
+  <script>
     'use strict'
 
-    function logText(...args) {
-        const textElement = document.querySelector('#text');
-        const text = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg).join('\n');
-        textElement.innerText += `${text}\n`;
+    const log = {
+      logElement: document.querySelector('#log'),
+      clear() {
+        this.logElement.innerHTML = ''
+      },
+      logText(...args) {
+        const text = args
+          .map((arg) =>
+            typeof arg === 'object' ? `${JSON.stringify(arg, null, 2)}` : arg
+          )
+          .join('\n')
+        this.logElement.innerHTML += `${text}\n`
+      },
     }
 
-    const controls = document.querySelector('#controls')
-    if (window.showDirectoryPicker) {
-        logText('Using directory picker')
+    function setControls() {
+      const controls = document.querySelector('#controls')
+      if (window.showDirectoryPicker) {
         controls.removeChild(document.querySelector('#ndp'))
-    } else {
-        logText('Using file Picker')
+      } else {
         controls.removeChild(document.querySelector('#hdp'))
+      }
     }
-</script>
 
+    function logHeader() {
+      if (window.showDirectoryPicker) {
+        log.clear()
+        log.logText('Using directory picker')
+      } else {
+        log.clear()
+        log.logText('Using file Picker')
+      }
+    }
+
+    document.body.addEventListener('pickedEvent', (event) => {
+      const { dir, files } = event.detail
+
+      // get files
+      const fileInfos = [...files]
+        .map((handle) => {
+          const result =
+            /^\d*\s*(.*?)(?:\.[^.]*)?$/g.exec(handle.name) ?? handle.name
+          const label = result !== null ? result[1] : handle.name
+          const player = document.querySelector('#player')
+          const canPlay = player.canPlayType(handle.type) == '' ? false : true
+          return {
+            handle,
+            label,
+            type: handle.type,
+            canPlay,
+            url: canPlay ? URL.createObjectURL(handle) : '', // TODO see if need to free on delete
+          }
+        })
+        .map((info) => {
+          info
+          return info
+        })
+      logHeader()
+      log.logText(
+        `directory: ${dir}`,
+        `files:\n${fileInfos
+          .map((fi) => {
+            const klass = fi.canPlay ? 'playable' : 'unplayable '
+            return `<span class="file ${klass}"> ${fi.label}\t${fi.type}</span>`
+          })
+          .join('\n')}`
+      )
+    })
+
+    setControls()
+    logHeader()
+  </script>
 </html>
