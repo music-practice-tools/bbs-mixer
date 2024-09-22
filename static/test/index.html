@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="ie=edge" />
+    <title>Web Audio Tests</title>
+    <link
+      rel="stylesheet"
+      href="styles.css" />
+    <script
+      defer
+      src="script.js"></script>
+  </head>
+
+  <body>
+    <h1>Web Audio Tests</h1>
+    <audio
+      id="player"
+      onerror="glitchHandler('error')"
+      onstalled="glitchHandler('stalled')"
+      onwaiting="glitchHandler('waiting')"></audio>
+
+    <div id="container">
+      <div id="controls">
+        <div id="hdp">
+          <button id="selectfolder">Select Folder</button>
+        </div>
+        <div id="ndp">
+          <button onclick="document.querySelector('#ndp-input').click()">
+            Select Folder
+          </button>
+          <input
+            id="ndp-input"
+            type="file"
+            webkitdirectory
+            accept="audio/*" />
+        </div>
+
+        <button id="teststream">Stream Test</button>
+      </div>
+      <pre id="log"></pre>
+    </div>
+  </body>
+</html>
