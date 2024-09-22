@@ -1,6 +1,7 @@
 <script>
   import { onDestroy, getContext } from 'svelte'
 
+  import Panner from '$lib/Panner.svelte'
   import Fader from '$lib/Fader.svelte'
   import Meter from '$lib/Meter.svelte'
 
@@ -19,16 +20,19 @@
   let muteDisabled = false
   let solo = undefined
 
+  let panNode
   let fadeNode
   let muteNode
   let meteredNode
 
   $: {
     if (input !== undefined && output !== undefined && fadeNode === undefined) {
+      panNode = audioContext.createStereoPanner()
       fadeNode = audioContext.createGain()
       muteNode = audioContext.createGain()
 
       input
+        .connect(panNode)
         .connect(muteNode)
         .connect(fadeNode)
         .connect(output.node, 0, output.index)
@@ -39,9 +43,14 @@
   onDestroy(() => {
     // I doubt this is needed - assume nodes and source are GCd
     input.disconnect()
+    panNode.disconnect()
     fadeNode.disconnect()
     muteNode.disconnect()
   })
+
+  function handlePanner(event) {
+    panNode.pan.setValueAtTime(event.detail, audioContext.currentTime)
+  }
 
   function handleFader(event) {
     fadeNode.gain.value = event.detail
@@ -111,6 +120,9 @@
   class="component {className}"
   {id}>
   <div class="controls">
+    <Panner
+      id={`panner-${id}`}
+      on:panner={handlePanner}></Panner>
     <slot></slot>
     <div class="buttons">
       {#if hasSolo}
