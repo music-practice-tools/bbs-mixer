@@ -197,9 +197,9 @@ async function handleTestStream(event) {
     )
     strip.audioElement.onplay = (el) => {
       log.logText(
-        `  ${el.target.id.padStart(2, ' ')}: ${strip.info.label}\t${
-          audioContext.currentTime
-        }`
+        `  ${el.target.id.padStart(2, ' ')}: ${
+          strip.info.label
+        }\t${audioContext.currentTime.toFixed(5)}`
       )
     }
     strip.audioElement.onerror = glitchHandler('load error')
