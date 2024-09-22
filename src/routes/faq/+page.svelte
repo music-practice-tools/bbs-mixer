@@ -55,12 +55,12 @@
 
   <dt>How are the channels ordered and the labels decided?</dt>
   <dd>
-    The channel labels are derived from the filenames. the files and so the
-    channels are ordered alphabetically, eg "piano" appears to the left of
-    "tuba". Any file extension (eg .mp3) is dropped from the label. In addition,
-    any leading digits followed by a space are also dropped but allow control of
-    the order of the channels. So for example, the files "01 tuba.mp3" and "02
-    piano.mp3" will result in "tuba" followed by "piano".
+    The channel labels are derived from the filenames. They are ordered
+    alphabetically, eg "piano" appears to the left of "tuba". Any file extension
+    (eg .mp3) is dropped from the label. In addition, any leading digits
+    followed by a space are also dropped but allow control of the order of the
+    channels. So for example, the files "01 tuba.mp3" and "02 piano.mp3" will
+    result in "tuba" followed by "piano".
   </dd>
 
   <dt>Can I play other audio files?</dt>
@@ -68,6 +68,18 @@
     Most audio file formats are supported. Obviously, the files in a folder need
     to be designed to be played together. The files created by stem extraction
     tools, for example, work well.
+  </dd>
+
+  <dt>Can I see any information about the files?</dt>
+  <dd>
+    If the package of files includes a "readme.txt" file containing information
+    about the audio files this can be displayed using the ? button.
+  </dd>
+
+  <dt>Is there anything to help when files don't play</dt>
+  <dd>
+    Try the <a href="/test">test page</a> which shows the files, which can be played
+    and any errors when trying to play them.
   </dd>
 </dl>
 

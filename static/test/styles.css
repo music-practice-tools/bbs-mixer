@@ -1,3 +1,7 @@
+:root {
+  font-family: Sans-Serif;
+}
+
 #ndp-input {
   display: none;
 }
@@ -9,6 +13,7 @@
 }
 
 #controls {
+  width: 5rem;
   flex-direction: column;
   margin: 1rem;
 }

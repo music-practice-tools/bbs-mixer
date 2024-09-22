@@ -145,12 +145,26 @@ function glitchHandler(name) {
   }
 }
 
+let strips = []
+
+async function handleStop(event) {
+  if (strips.length) {
+    strips.forEach((el) => {
+      el.audioElement.pause()
+    })
+    strips = []
+    log.logText('Stopped playing')
+  }
+}
+
 let audioContext
 async function handleTestStream(event) {
   if (!picked.fileInfos) {
     alert('Select a folder before running test')
     return
   }
+
+  handleStop()
 
   if (!audioContext) {
     audioContext = new AudioContext()
@@ -159,7 +173,6 @@ async function handleTestStream(event) {
     audioContext.resume()
   }
 
-  let strips = []
   let readyChannels = []
   const { dir, fileInfos } = picked // global
 
@@ -239,4 +252,7 @@ document.body.addEventListener('picked', ({ detail: { dir, files } }) => {
 
 document.querySelector('#teststream').addEventListener('click', () => {
   handleTestStream(picked)
+})
+document.querySelector('#stop').addEventListener('click', () => {
+  handleStop(picked)
 })
