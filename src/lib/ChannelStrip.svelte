@@ -5,7 +5,7 @@
 </script>
 
 <script>
-  import { onMount, getContext, createEventDispatcher } from 'svelte'
+  import { onMount, onDestroy, getContext, createEventDispatcher } from 'svelte'
 
   import Strip from '$lib/Strip.svelte'
 
@@ -19,7 +19,7 @@
     return {
       playing,
       channel: channelNumber,
-      ready: audioElement && audioElement.readyState >= 2,
+      ready: audioElement && audioElement.readyState >= 3,
       duration: (audioElement && audioElement.duration) ?? 0,
       current: (audioElement && audioElement.currentTime) ?? 0, // note when settng CT readyState may become 1
     }
@@ -49,13 +49,27 @@
   let audioElement
   let audio
 
-  $: {
-    const { verb, detail } = $mediaAction$
+  function foo(verb) {
+    console.log(`${verb} ${channelNumber} ${audioContext.currentTime}`)
+  }
+
+  function processVerb(verb, detail) {
+    //foo(verb)
+
     switch (verb) {
       case 'pause':
+        if (audioElement) {
+          audioElement.pause()
+        }
+        break
       case 'play':
         if (audioElement) {
-          audioElement[verb == 'pause' ? 'pause' : 'play']()
+          //audioElement[verb == 'pause' ? 'pause' : 'play']()
+          console.log(
+            `b4 ${channelNumber}  ${audioContext.currentTime} ${audioElement.readyState}`,
+          )
+          //setTimeout(() => audioElement.play(), 0)
+          console.log(`af ${channelNumber} ${audioContext.currentTime}`)
         }
         break
       case 'skipback':
@@ -69,8 +83,17 @@
     }
   }
 
+  $: {
+    const { verb, detail } = $mediaAction$
+    processVerb(verb, detail)
+  }
+
   onMount(() => {
     audio = audioContext.createMediaElementSource(audioElement)
+  })
+
+  onDestroy(() => {
+    audioElement.pause()
   })
 
   function handleCanPlay(event) {
@@ -100,7 +123,7 @@
   }}
   bind:this={audioElement}
   on:ended={handleEnded}
-  on:canplay={handleCanPlay}
+  on:canplaythrough={handleCanPlay}
   on:error={glitchHandler('error')}
   on:stalled={glitchHandler('stalled')}
   on:waiting={glitchHandler('waiting')}></audio>

@@ -15,12 +15,14 @@
   import ChannelStrip from '$lib/ChannelStrip.svelte'
   import MainStrip from '$lib/MainStrip.svelte'
 
-  import { media$ } from '$lib/Nav.svelte'
-
   export let className = 'channels'
   export let id = 'channels'
 
   const audioContext = getContext('audioContext')
+  const mediaAction$ = getContext('mediaAction$')
+  const media$ = getContext('media$')
+  const solo$ = getContext('solo$')
+  const mute$ = getContext('mute$')
 
   const defaultProgress = { playing: false, duration: 0, current: 0 }
 
@@ -32,6 +34,9 @@
 
   function handleMedia({ dir, media }) {
     if (media.length == 0) {
+      $mediaAction$ = { verb: 'pause' }
+      $solo$ = 0
+      $mute$ = 0
       dirName = undefined
       fileInfos = []
       canPlay = false
@@ -55,6 +60,7 @@
         .filter(({ type }) => audio.canPlayType(type))
       progress = { ...defaultProgress }
       // canPlay will be set via handleReady
+      // mainBusReady = createAudioProcessor(audioContext, fileInfos.length)
       mainBusReady = new Promise((resolve) => {
         const mainBus = audioContext.createGain()
         mainBus.gain.value = 1.0
@@ -85,7 +91,7 @@
     node.channelCount = 2
     node.channelCountMode = 'explicit'
     node.onprocessorerror = (event) => {
-      console.error('Audio worklet node processing error!', event.message)
+      console.error(`Audio worklet node processing error!: ${event.message}`)
     }
     return node
   }

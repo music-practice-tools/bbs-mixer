@@ -1,0 +1,44 @@
+#ndp-input {
+  display: none;
+}
+
+#container {
+  width: 90%;
+  margin-left: 5%;
+  display: flex;
+}
+
+#controls {
+  flex-direction: column;
+  margin: 1rem;
+}
+
+#log {
+  width: 100%;
+  margin: 1rem;
+  padding: 0.5rem;
+  border: 1px black solid;
+}
+
+.unplayable {
+  text-decoration-line: line-through;
+  font-style: italic;
+  font-weight: lighter;
+}
+.info {
+  font-weight: lighter;
+  text-decoration: line-through dashed darkred;
+  color: darkred;
+}
+.text {
+  font-family: serif;
+  font-style: italic;
+  font-size: 13px;
+  color: darkblue;
+}
+#log {
+  tab-size: 32;
+}
+#log span:nth-of-type(even) {
+  background-color: #fbfaeb;
+}

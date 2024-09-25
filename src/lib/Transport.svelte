@@ -34,6 +34,7 @@
 
   let wasPlaying = false
   function handleScrubSelect(isEnd) {
+    console.log('s')
     if (!isEnd && $mediaAction$.verb == 'play') {
       wasPlaying = $mediaAction$
       $mediaAction$ = { verb: 'pause' }
