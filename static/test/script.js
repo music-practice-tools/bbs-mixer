@@ -107,11 +107,10 @@ async function logFileInfos(dir, fileInfos) {
         const klass = fi.isReadme
           ? 'info '
           : fi.canPlay
-          ? 'playable'
-          : 'unplayable '
-        return `<span class="file ${klass}"> ${fi.label}\t${
-          fi.type
-        }\t(${fi.size.toFixed(2)} MB)</span>`
+            ? 'playable'
+            : 'unplayable '
+        return `<span class="file ${klass}"> ${fi.label}\t${fi.type
+          }\t(${fi.size.toFixed(2)} MB)</span>`
       })
       .join('\n')}`
   )
@@ -120,15 +119,13 @@ async function logFileInfos(dir, fileInfos) {
     .filter((fi) => fi.isReadme)[0]
     .handle.text()
   log.logText(
-    `${nplayable} files${
-      nplayable != fileInfos.length ? ` of ${fileInfos.length}` : ``
+    `${nplayable} files${nplayable != fileInfos.length ? ` of ${fileInfos.length}` : ``
     } will play`,
-    `${
-      readmeInfo
-        ? `Has Readme - <span class="text">${readmeInfo
-            .slice(0, 100)
-            .replace(/(\r\n|\r|\n)/g, ' ')}</span>...`
-        : `No Readme`
+    `${readmeInfo
+      ? `Has Readme - <span class="text">${readmeInfo
+        .slice(0, 100)
+        .replace(/(\r\n|\r|\n)/g, ' ')}</span>...`
+      : `No Readme`
     }`
   )
 }
@@ -138,8 +135,7 @@ async function logFileInfos(dir, fileInfos) {
 function glitchHandler(name) {
   return (event) => {
     log.logText(
-      `Glitch "${name}" in ${event.target.id}: ${event.target.dataset.label} ${
-        event.message ?? ''
+      `Glitch "${name}" in ${event.target.id}: ${event.target.dataset.label} ${event.message ?? ''
       }`
     )
   }
@@ -197,8 +193,7 @@ async function handleTestStream(event) {
     )
     strip.audioElement.onplay = (el) => {
       log.logText(
-        `  ${el.target.id.padStart(2, ' ')}: ${
-          strip.info.label
+        `  ${el.target.id.padStart(2, ' ')}: ${strip.info.label
         }\t${audioContext.currentTime.toFixed(5)}`
       )
     }
@@ -218,6 +213,7 @@ async function handleTestStream(event) {
 
   // play
   log.logText('Playing')
+  log.logText(`Sample Rate: ${audioContext.sampleRate / 1000} kHz`)
   strips.forEach((strip, i) => {
     strip.audioElement.play()
   })
