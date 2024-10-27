@@ -1,6 +1,7 @@
 <script>
   import { onDestroy, getContext } from 'svelte'
 
+  import { settings } from '$lib/persistentStore.js'
   import Panner from '$lib/Panner.svelte'
   import Fader from '$lib/Fader.svelte'
   import Meter from '$lib/Meter.svelte'
@@ -27,12 +28,14 @@
 
   $: {
     if (input !== undefined && output !== undefined && fadeNode === undefined) {
-      panNode = audioContext.createStereoPanner()
+      if ($settings.showPans) {
+        panNode = audioContext.createStereoPanner()
+      }
       fadeNode = audioContext.createGain()
       muteNode = audioContext.createGain()
 
-      input
-        .connect(panNode)
+      let node = $settings.showPans ? input.connect(panNode) : input
+      node
         .connect(muteNode)
         .connect(fadeNode)
         .connect(output.node, 0, output.index)
@@ -120,9 +123,11 @@
   class="component {className}"
   {id}>
   <div class="controls">
-    <Panner
-      id={`panner-${id}`}
-      on:panner={handlePanner}></Panner>
+    {#if $settings.showPans}
+      <Panner
+        id={`panner-${id}`}
+        on:panner={handlePanner}></Panner>
+    {/if}
     <slot></slot>
     <div class="buttons">
       {#if hasSolo}

@@ -70,16 +70,20 @@
     tools, for example, work well.
   </dd>
 
+  <dt>What are the settings?</dt>
+  <dd>Show pan controls: shows left/right pan controls on the channels.</dd>
+
   <dt>Can I see any information about the files?</dt>
   <dd>
-    If the package of files includes a "readme.txt" file containing information
-    about the audio files this can be displayed using the ? button.
+    The package of files usually includes a "readme.txt" file containing
+    information about the audio files.
   </dd>
 
   <dt>Is there anything to help when files don't play</dt>
   <dd>
-    Try the <a href="/test">test page</a> which shows the files, which can be played
-    and any errors when trying to play them.
+    Try the <a href="/test">test page</a> which shows information including files
+    in the selected folder, which can be played and any errors when trying to play
+    them.
   </dd>
 </dl>
 
